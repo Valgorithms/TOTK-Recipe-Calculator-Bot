@@ -10,6 +10,7 @@
  */
 
 use \TOTK\Crafter;
+use \TOTK\Helpers\Collection;
 use \TOTK\Parts\Ingredient;
 
 ini_set('display_errors', 1);
@@ -18,10 +19,22 @@ set_time_limit(0);
 ignore_user_abort(1);
 ini_set('max_execution_time', 0);
 ini_set('memory_limit', '-1'); //Unlimited memory usage
-include getcwd() . '/vendor/autoload.php';
+if (! include getcwd() . '/vendor/autoload.php') {
+    include __DIR__ . '/src/TOTK/crafter.php';
+    include __DIR__ . '/src/TOTK/Helpers/collection.php';
+    include __DIR__ . '/src/TOTK/Parts/ingredient.php';
+}
 
 
 $crafter = new Crafter();
+
+if (! $materials_file = file(__DIR__ . '\vendor\vzgcoders\totk-recipe-calculator\src\TOTK\CSVs\materials.csv')) $materials_file = file(__DIR__ . '\src\TOTK\CSVs\materials.csv');
+$csv = array_map('str_getcsv', $materials_file);
+$keys = array_shift($csv);
+$materials = array();
+foreach ($csv as $row) $materials[] = array_combine($keys, $row);
+$materials_collection = new Collection([], $keys[2]);
+foreach ($materials as $array) $materials_collection->pushItem($array);
 
 //var_dump($materials_collection);
 //$ingredient1 = new Ingredient($materials_collection->get('Euen name', 'Hydromelon'));
