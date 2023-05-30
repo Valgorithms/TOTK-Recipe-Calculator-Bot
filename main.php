@@ -163,6 +163,7 @@ $ingredient1 = new Ingredient($materials_collection->get('Euen name', 'Apple'));
 $ingredient2 = new Ingredient($materials_collection->get('Euen name', 'Wildberry'));
 $ingredient3 = new Ingredient($materials_collection->get('Euen name', 'Cane Sugar'));
 $ingredient4 = new Ingredient($materials_collection->get('Euen name', 'Tabantha Wheat'));
+$ingredient5 = null;
 
 
 
