@@ -14,6 +14,7 @@
     "require": {
         "php": "^8.0",
         "monolog/monolog": "^2.1.1 || ^3.0",
+        "team-reflex/discord-php": "dev-master",
         "vzgcoders/totk-recipe-calculator": "dev-main"
     },
     "minimum-stability": "dev",
