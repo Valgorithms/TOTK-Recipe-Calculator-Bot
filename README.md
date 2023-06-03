@@ -22,7 +22,7 @@ Before you start using this Library, you **need** to know how PHP works, you nee
 - `ext-json`
 - `ext-zlib`
 
-### Windows and SSL
+### Windows, SSL and POSIX
 
 Unfortunately PHP on Windows does not have access to the Windows Certificate Store. This is an issue because TLS gets used and as such certificate verification gets applied (turning this off is **not** an option).
 
@@ -30,6 +30,8 @@ You will notice this issue by your script exiting immediately after one loop tur
 
 As such users of this library need to download a [Certificate Authority extract](https://curl.haxx.se/docs/caextract.html) from the cURL website.<br>
 The path to the caextract must be set in the [`php.ini`](https://secure.php.net/manual/en/openssl.configuration.php) for `openssl.cafile`.
+
+Additionally, the functions located within the webapi interface do not function, or otherwise do not do so as intended. This is a hard limit due to Windows' implementation of POSIX. If you need access to all functions within the webapi other than just viewing the bot's logs remotely we recommend hosting on a Linux-based OS. You may also try using WSL, however we do not guarantee its functionality as we do not support it.
 
 #### Recommended Extensions
 
