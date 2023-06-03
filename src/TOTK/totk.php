@@ -160,7 +160,7 @@ class TOTK
                 $this->logger->info("logged in as {$this->discord->user->displayname} ({$this->discord->id})");
                 $this->logger->info('------');
 
-                $this->embed_footer = ($this->github ?  $this->github . PHP_EOL : '') . "{$this->discord->username} by Valithor#5947";
+                $this->embed_footer = ($this->github ?  $this->github . PHP_EOL : '') . "{$this->discord->username}#{$this->discord->discriminator} by Valithor#5947";
 
                 //Initialize configurations
                 if (! $discord_config = $this->VarLoad('discord_config.json')) $discord_config = [];
@@ -339,6 +339,7 @@ class TOTK
         var_dump('[OUTPUT]', $output = $this->crafter->process($ingredients));
 
         $embed = new Embed($this->discord);
+        $embed->setFooter($this->embed_footer);
         $embed->setTitle('Cooking Pot');
         $embed->addFieldValues('Search Terms',  implode(', ', $search_terms));
         if ($valid_names) $embed->addFieldValues('Valid Ingredients',  implode(', ', $valid_names));
@@ -375,6 +376,7 @@ class TOTK
         if (!$meal) return 'No meal found';
 
         $embed = new Embed($this->discord);
+        $embed->setFooter($this->embed_footer);
         $embed->setTitle('Recipe Lookup');
         //$ActorName = $meal['ActorName'] ?? '';
         $EuenName = $meal['Euen name'] ?? '';
@@ -436,6 +438,7 @@ class TOTK
             return "No ingredient found for search term `$value` with key `$key`";
         }
         $embed = new Embed($this->discord);
+        $embed->setFooter($this->embed_footer);
         $embed->addFieldValues('Search Term', "`$value`", true);
         $embed->addFieldValues('Ingredient', $ingredient->getEuenName());
         $embed->addFieldValues('Classification', $ingredient->getClassification(), true);
