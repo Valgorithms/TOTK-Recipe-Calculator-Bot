@@ -49,6 +49,48 @@ class Slash
             'default_member_permissions' => (string) new RolePermission($this->TOTK->discord, ['moderate_members' => true]),
         ]));
 
+        //if ($command = $commands->get('name', 'cook')) $commands->delete($command->id);
+        if (! $commands->get('name', 'cook')) {
+            $command = new \Discord\Parts\Interactions\Command\Command($this->TOTK->discord, [
+                'name'			=> 'cook',
+                'description'	=> 'Cook some ingredients!',
+                'dm_permission' => false,
+                'options'		=> [
+                    [
+                        'name'			=> 'ingredient1',
+                        'description'	=> 'The name of the 1st ingredient in the dish',
+                        'type'			=>  3,
+                        'required'		=> true,
+                    ],
+                    [
+                        'name'			=> 'ingredient2',
+                        'description'	=> 'The name of the 2nd ingredient in the dish',
+                        'type'			=>  3,
+                        'required'		=> false,
+                    ],
+                    [
+                        'name'			=> 'ingredient3',
+                        'description'	=> 'The name of the 3rd ingredient in the dish',
+                        'type'			=>  3,
+                        'required'		=> false,
+                    ],
+                    [
+                        'name'			=> 'ingredient4',
+                        'description'	=> 'The name of the 4th ingredient in the dish',
+                        'type'			=>  3,
+                        'required'		=> false,
+                    ],
+                    [
+                        'name'			=> 'ingredient5',
+                        'description'	=> 'The name of the 5th ingredient in the dish',
+                        'type'			=>  3,
+                        'required'		=> false,
+                    ],
+                ]
+            ]);
+            $commands->save($command);
+        }
+
         $this->declareListeners();
     }
     public function declareListeners()
@@ -61,6 +103,11 @@ class Slash
         $this->TOTK->discord->listenCommand('stats', function ($interaction): void
         {
             $interaction->respondWithMessage(MessageBuilder::new()->setContent('TOTK Stats')->addEmbed($this->TOTK->stats->handle()));
+        });
+
+        $this->TOTK->discord->listenCommand('cook', function ($interaction): void
+        {
+            $interaction->respondWithMessage(MessageBuilder::new()->setContent($this->TOTK->cook([$interaction->data->options['ingredient1']->value, $interaction->data->options['ingredient2']->value, $interaction->data->options['ingredient3']->value, $interaction->data->options['ingredient4']->value, $interaction->data->options['ingredient5']->value])));
         });
     }
 }

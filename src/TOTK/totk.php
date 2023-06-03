@@ -274,4 +274,9 @@ class TOTK
     {
         $this->discord->updatePresence($activity, false, $state);
     }
+
+    public function cook(): string
+    {
+        return 'Not implemented yet!';
+    }
 }
