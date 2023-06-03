@@ -403,4 +403,54 @@ class TOTK
 
         return $embed;
     }
+
+    public function ingredient($value = 'Mushroom Skewers', $key = 'euenName')
+    {
+        $materials = $this->materials_collection->filter(function($ingredient) use ($key, $value) { return (
+            (  (strtolower($ingredient[$key] == strtolower($value)))
+            || (str_starts_with(strtolower($ingredient[$key]), strtolower($value))/* || str_ends_with(strtolower($ingredient[$key]*), strtolower($name))*/)
+            || (! str_starts_with(strtolower($ingredient[$key]), strtolower($value)) && str_ends_with(strtolower($ingredient[$key]), strtolower($value)))
+            || (! str_starts_with(strtolower($ingredient[$key]), strtolower($value)) && ! str_ends_with(strtolower($ingredient[$key]), strtolower($value)) && str_contains(strtolower($ingredient[$key]), strtolower($value)))
+            )
+        );});
+        if (! $materials->count()) return "No ingredient found for search term `$value` with key `$key`";
+        
+        $ingredients = [];
+        foreach ($materials as $material) {
+            try { 
+                $ingredient = new Ingredient($material);
+                $ingredients[] = $ingredient;
+            }
+            catch (\Error $e) {
+                $this->logger->warning($e->getMessage());
+                $ingredient = null;
+            }
+        }
+        $embed = new Embed($this->discord);
+        $count = 1;
+        foreach ($ingredients as $ingredient) {
+            if ($count >= 4) break;
+            if (count($ingredients) === 1) $count = null; //Don't show the number if there's only one ingredient{
+            $embed->addFieldValues("Ingredient $count", $ingredient->getEuenName());
+            $embed->addFieldValues('Classification', $ingredient->getClassification(), true);
+            $embed->addFieldValues('BuyingPrice', $ingredient->getBuyingPrice(), true);
+            $embed->addFieldValues('SellingPrice', $ingredient->getSellingPrice(), true);
+            $embed->addFieldValues('Color', $ingredient->getColor(), true);
+            $embed->addFieldValues('AdditionalDamage', $ingredient->getAdditionalDamage(), true);
+            $embed->addFieldValues('EffectLevel', $ingredient->getEffectLevel(), true);
+            $embed->addFieldValues('EffectType', $ingredient->getEffectType(), true);
+            $embed->addFieldValues('Seasoning', $ingredient->getSeasoning(), true);
+            if (null !== $ingredient->getSeasoningBoost()) $embed->addFieldValues('SeasoningBoost', $ingredient->getSeasoningBoost(), true);
+            $embed->addFieldValues('AlwaysCrits', $ingredient->getAlwaysCrits(), true);
+            $embed->addFieldValues('ConfirmedTime', $ingredient->getConfirmedTime(), true);
+            $embed->addFieldValues('HitPointRecover', $ingredient->getHitPointRecover(), true);
+            $embed->addFieldValues('BoostEffectiveTime', $ingredient->getBoostEffectiveTime(), true);
+            $embed->addFieldValues('BoostHitPointRecover', $ingredient->getBoostHitPointRecover(), true);
+            $embed->addFieldValues('BoostMaxHeartLevel', $ingredient->getBoostMaxHeartLevel(), true);
+            $embed->addFieldValues('BoostStaminaLevel', $ingredient->getBoostStaminaLevel(), true);
+            $embed->addFieldValues('BoostSuccessRate', $ingredient->getBoostSuccessRate(), true);
+            $count++;
+        }
+        return $embed;
+    }
 }
