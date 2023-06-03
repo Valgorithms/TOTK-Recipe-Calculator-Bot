@@ -317,9 +317,9 @@ class TOTK
             $search_terms[] = "`$name`";
             $materials = $this->materials_collection->filter(function($ingredient) use ($name) { return (
                 (  (strtolower($ingredient['Euen name'] == strtolower($name)))
-                || (str_starts_with(strtolower($ingredient['Euen name']), strtolower($name))/* || str_ends_with(strtolower($ingredient['Euen name']*), strtolower($name))*/)
-                || (! str_starts_with(strtolower($ingredient['Euen name']), strtolower($name)) && str_ends_with(strtolower($ingredient['Euen name']), strtolower($name)))
-                || (! str_starts_with(strtolower($ingredient['Euen name']), strtolower($name)) && ! str_ends_with(strtolower($ingredient['Euen name']), strtolower($name)) && str_contains(strtolower($ingredient['Euen name']), strtolower($name)))
+                || (! is_numeric($name) && str_starts_with(strtolower($ingredient['Euen name']), strtolower($name))/* || str_ends_with(strtolower($ingredient['Euen name']*), strtolower($name))*/)
+                || (! is_numeric($name) && ! str_starts_with(strtolower($ingredient['Euen name']), strtolower($name)) && str_ends_with(strtolower($ingredient['Euen name']), strtolower($name)))
+                || (! is_numeric($name) && ! str_starts_with(strtolower($ingredient['Euen name']), strtolower($name)) && ! str_ends_with(strtolower($ingredient['Euen name']), strtolower($name)) && str_contains(strtolower($ingredient['Euen name']), strtolower($name)))
                 )
             );});
             if (! $materials->count()) $invalid_names = [$name];
@@ -330,8 +330,8 @@ class TOTK
                     $ingredient = null;
                 }
                 if ($ingredient) {
-                    $ingredients[] = $ingredient;
-                    $valid_names[] = $materials->first()['Euen name'];
+                    $ingredients[] = "`$ingredient`";
+                    $valid_names[] = "`{$ingredient->getEuenName()}`";
                 }
             }
         }
@@ -366,9 +366,9 @@ class TOTK
         $meals = $this->meals_collection->filter( function($meal) use ($key, $value) { //return str_starts_with(strtolower($meal[$key]), strtolower($value)); });
         return (
             (  (strtolower($meal[$key] == strtolower($value)))
-            || (str_starts_with(strtolower($meal[$key]), strtolower($value))/* || str_ends_with(strtolower($ingredient['Euen name']*), strtolower($name))*/)
-            || (! str_starts_with(strtolower($meal[$key]), strtolower($value)) && str_ends_with(strtolower($meal[$key]), strtolower($value)))
-            || (! str_starts_with(strtolower($meal[$key]), strtolower($value)) && ! str_ends_with(strtolower($meal[$key]), strtolower($value)) && str_contains(strtolower($meal[$key]), strtolower($value)))
+            || (! is_numeric($value) && str_starts_with(strtolower($meal[$key]), strtolower($value))/* || str_ends_with(strtolower($ingredient['Euen name']*), strtolower($name))*/)
+            || (! is_numeric($value) && ! str_starts_with(strtolower($meal[$key]), strtolower($value)) && str_ends_with(strtolower($meal[$key]), strtolower($value)))
+            || (! is_numeric($value) && ! str_starts_with(strtolower($meal[$key]), strtolower($value)) && ! str_ends_with(strtolower($meal[$key]), strtolower($value)) && str_contains(strtolower($meal[$key]), strtolower($value)))
             )
         );});
         var_dump('[MEAL]', $meal = $meals->first());
@@ -389,12 +389,22 @@ class TOTK
         if ($EuenName) $embed->addFieldValues('Euen name', $EuenName);
         if ($Recipen°) $embed->addFieldValues('Recipe n°', $Recipen°);
         if ($Recipes) {
+            $EuenNames = [];
+            $Recipen°s = [];
+            $Recipen°Names = [];
             $formatted_recipes = [];
             $int = 1;
             foreach ($Recipes as $recipe) {
+                if (!in_array($EuenName, $Recipen°Names)) {
+                    $Recipen°Names[] = $EuenName;
+                    $EuenNames[] = "$int: `$EuenName`";
+                    $Recipen°s[] = "$int: `$Recipen°`";
+                }
                 $formatted_recipes[] = "$int: `$recipe`";
                 $int++;
             }
+            if ($EuenNames) $embed->addFieldValues('Euen name', implode(', ', $EuenNames), true);
+            if ($Recipen°s) $embed->addFieldValues('Recipe n°', implode(', ', $Recipen°s), true);
             $embed->addFieldValues('Recipe', implode(PHP_EOL, $formatted_recipes));
         }
         if ($BonusHeart) $embed->addFieldValues('Bonus Heart', $BonusHeart, true);
@@ -408,49 +418,43 @@ class TOTK
     {
         $materials = $this->materials_collection->filter(function($ingredient) use ($key, $value) { return (
             (  (strtolower($ingredient[$key] == strtolower($value)))
-            || (str_starts_with(strtolower($ingredient[$key]), strtolower($value))/* || str_ends_with(strtolower($ingredient[$key]*), strtolower($name))*/)
-            || (! str_starts_with(strtolower($ingredient[$key]), strtolower($value)) && str_ends_with(strtolower($ingredient[$key]), strtolower($value)))
-            || (! str_starts_with(strtolower($ingredient[$key]), strtolower($value)) && ! str_ends_with(strtolower($ingredient[$key]), strtolower($value)) && str_contains(strtolower($ingredient[$key]), strtolower($value)))
+            || (! is_numeric($value) && str_starts_with(strtolower($ingredient[$key]), strtolower($value))/* || str_ends_with(strtolower($ingredient[$key]*), strtolower($name))*/)
+            || (! is_numeric($value) && ! str_starts_with(strtolower($ingredient[$key]), strtolower($value)) && str_ends_with(strtolower($ingredient[$key]), strtolower($value)))
+            || (! is_numeric($value) && ! str_starts_with(strtolower($ingredient[$key]), strtolower($value)) && ! str_ends_with(strtolower($ingredient[$key]), strtolower($value)) && str_contains(strtolower($ingredient[$key]), strtolower($value)))
             )
         );});
         if (! $materials->count()) return "No ingredient found for search term `$value` with key `$key`";
         
         $ingredients = [];
-        foreach ($materials as $material) {
-            try { 
-                $ingredient = new Ingredient($material);
-                $ingredients[] = $ingredient;
-            }
-            catch (\Error $e) {
-                $this->logger->warning($e->getMessage());
-                $ingredient = null;
-            }
+        $material = $materials->first(); //Only show the first result
+        try { 
+            $ingredient = new Ingredient($material);
+            $ingredients[] = $ingredient;
+        }
+        catch (\Error $e) {
+            $this->logger->warning($e->getMessage());
+            return "No ingredient found for search term `$value` with key `$key`";
         }
         $embed = new Embed($this->discord);
-        $count = 1;
-        foreach ($ingredients as $ingredient) {
-            if ($count >= 4) break;
-            if (count($ingredients) === 1) $count = null; //Don't show the number if there's only one ingredient{
-            $embed->addFieldValues("Ingredient $count", $ingredient->getEuenName());
-            $embed->addFieldValues('Classification', $ingredient->getClassification(), true);
-            $embed->addFieldValues('BuyingPrice', $ingredient->getBuyingPrice(), true);
-            $embed->addFieldValues('SellingPrice', $ingredient->getSellingPrice(), true);
-            $embed->addFieldValues('Color', $ingredient->getColor(), true);
-            $embed->addFieldValues('AdditionalDamage', $ingredient->getAdditionalDamage(), true);
-            $embed->addFieldValues('EffectLevel', $ingredient->getEffectLevel(), true);
-            $embed->addFieldValues('EffectType', $ingredient->getEffectType(), true);
-            $embed->addFieldValues('Seasoning', $ingredient->getSeasoning(), true);
-            if (null !== $ingredient->getSeasoningBoost()) $embed->addFieldValues('SeasoningBoost', $ingredient->getSeasoningBoost(), true);
-            $embed->addFieldValues('AlwaysCrits', $ingredient->getAlwaysCrits(), true);
-            $embed->addFieldValues('ConfirmedTime', $ingredient->getConfirmedTime(), true);
-            $embed->addFieldValues('HitPointRecover', $ingredient->getHitPointRecover(), true);
-            $embed->addFieldValues('BoostEffectiveTime', $ingredient->getBoostEffectiveTime(), true);
-            $embed->addFieldValues('BoostHitPointRecover', $ingredient->getBoostHitPointRecover(), true);
-            $embed->addFieldValues('BoostMaxHeartLevel', $ingredient->getBoostMaxHeartLevel(), true);
-            $embed->addFieldValues('BoostStaminaLevel', $ingredient->getBoostStaminaLevel(), true);
-            $embed->addFieldValues('BoostSuccessRate', $ingredient->getBoostSuccessRate(), true);
-            $count++;
-        }
+        $embed->addFieldValues('Search Term', "`$value`", true);
+        $embed->addFieldValues('Ingredient', $ingredient->getEuenName());
+        $embed->addFieldValues('Classification', $ingredient->getClassification(), true);
+        $embed->addFieldValues('BuyingPrice', $ingredient->getBuyingPrice(), true);
+        $embed->addFieldValues('SellingPrice', $ingredient->getSellingPrice(), true);
+        $embed->addFieldValues('Color', $ingredient->getColor(), true);
+        $embed->addFieldValues('AdditionalDamage', $ingredient->getAdditionalDamage(), true);
+        $embed->addFieldValues('EffectLevel', $ingredient->getEffectLevel(), true);
+        $embed->addFieldValues('EffectType', $ingredient->getEffectType(), true);
+        $embed->addFieldValues('Seasoning', $ingredient->getSeasoning(), true);
+        if (null !== $ingredient->getSeasoningBoost()) $embed->addFieldValues('SeasoningBoost', $ingredient->getSeasoningBoost(), true);
+        $embed->addFieldValues('AlwaysCrits', $ingredient->getAlwaysCrits(), true);
+        $embed->addFieldValues('ConfirmedTime', $ingredient->getConfirmedTime(), true);
+        $embed->addFieldValues('HitPointRecover', $ingredient->getHitPointRecover(), true);
+        $embed->addFieldValues('BoostEffectiveTime', $ingredient->getBoostEffectiveTime(), true);
+        $embed->addFieldValues('BoostHitPointRecover', $ingredient->getBoostHitPointRecover(), true);
+        $embed->addFieldValues('BoostMaxHeartLevel', $ingredient->getBoostMaxHeartLevel(), true);
+        $embed->addFieldValues('BoostStaminaLevel', $ingredient->getBoostStaminaLevel(), true);
+        $embed->addFieldValues('BoostSuccessRate', $ingredient->getBoostSuccessRate(), true);
         return $embed;
     }
 }
