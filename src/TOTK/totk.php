@@ -312,12 +312,19 @@ class TOTK
     {
         $ingredients = [];
         $valid_names = [];
-        foreach ($names as $name) if ($ingredient = new Ingredient($this->materials_collection->get('Euen name', $name))) {
-            $ingredients[] = $ingredient;
-            $valid_names[] = $name;
+        foreach ($names as $name) {
+            try { $ingredient = new Ingredient($this->materials_collection->get('Euen name', $name)); }
+            catch (\Error $e) {
+                $this->logger->warning($e->getMessage());
+                $ingredient = null;
+            }
+            if ($ingredient) {
+                $ingredients[] = $ingredient;
+                $valid_names[] = $name;
+            }
         }
-        var_dump('[OUTPUT]', $output = $this->crafter->process($ingredients));
         if (!$valid_names) return 'No valid ingredients were provided';
+        var_dump('[OUTPUT]', $output = $this->crafter->process($ingredients));
 
         $embed = new Embed($this->discord);
         $embed->setTitle('Cooking Pot');

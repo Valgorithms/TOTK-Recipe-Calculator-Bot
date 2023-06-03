@@ -138,7 +138,7 @@ class Slash
             if (isset($interaction->data->options['ingredient4'])) $ingredients[] = $interaction->data->options['ingredient4']->value;
             if (isset($interaction->data->options['ingredient5'])) $ingredients[] = $interaction->data->options['ingredient5']->value;
             $output = $this->TOTK->cook($ingredients);
-            if (is_string($output)) $interaction->respondWithMessage(MessageBuilder::new()->setContent($output));
+            if (is_string($output)) $interaction->respondWithMessage(MessageBuilder::new()->setContent($output), true);
             else $interaction->respondWithMessage(MessageBuilder::new()->addEmbed($output));
         });
 
@@ -164,7 +164,7 @@ class Slash
                 }
             }
             $output = $this->TOTK->recipe($interaction->data->options['value']->value, $key);
-            if (is_string($output)) $interaction->respondWithMessage(MessageBuilder::new()->setContent($output));
+            if (is_string($output)) $interaction->respondWithMessage(MessageBuilder::new()->setContent($output), true);
             else $interaction->respondWithMessage(MessageBuilder::new()->addEmbed($output));
         });
     }
