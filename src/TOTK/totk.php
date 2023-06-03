@@ -11,11 +11,9 @@
 
 namespace TOTK;
 
-use TOTK\Slash;
 use Discord\Discord;
 use Discord\Helpers\BigInt;
-//use Discord\Helpers\Collection;
-//use Discord\Parts\Embed\Embed;
+use Discord\Parts\Embed\Embed;
 use Discord\Parts\Guild\Guild;
 //use Discord\Parts\Guild\Role;
 //use Discord\Parts\User\Member;
@@ -28,6 +26,10 @@ use React\EventLoop\LoopInterface;
 use React\EventLoop\StreamSelectLoop;
 use React\Http\HttpServer;
 //use React\EventLoop\TimerInterface;
+use TOTK\Crafter;
+use TOTK\Slash;
+use TOTK\Helpers\Collection;
+use TOTK\Parts\Ingredient;
 
 class TOTK
 {
@@ -68,6 +70,9 @@ class TOTK
     public array $permissions = []; //NYI (and not sure if I'll use it)
     public array $discord_config = []; //This variable and its related function currently serve no purpose, but I'm keeping it in case I need it later
 
+    public Crafter $crafter;
+    public array $materials = [];
+    public Collection $materials_collection;
     /**
      * Creates a TOTK client instance.
      * 
@@ -79,6 +84,17 @@ class TOTK
 
         // x86 need gmp extension for big integer operation
         if (PHP_INT_SIZE === 4 && ! BigInt::init()) trigger_error('ext-gmp is not loaded. Permissions will NOT work correctly!', E_USER_WARNING);
+
+        $this->crafter = new Crafter();
+        if (! $materials_file = @file(getcwd() . '\vendor\vzgcoders\totk-recipe-calculator\src\TOTK\CSVs\materials.csv')) $materials_file = file(getcwd() . '\src\TOTK\CSVs\materials.csv');
+        $csv = array_map('str_getcsv', $materials_file);
+        $keys = array_shift($csv);
+        $materials = array();
+        foreach ($csv as $row) $materials[] = array_combine($keys, $row);
+        $this->materials = $materials;
+        $materials_collection = new Collection([], $keys[2]);
+        foreach ($materials as $array) $materials_collection->pushItem($array);
+        $this->materials_collection = $materials_collection;
         
         $options = $this->resolveOptions($options);
         
@@ -275,8 +291,37 @@ class TOTK
         $this->discord->updatePresence($activity, false, $state);
     }
 
-    public function cook(): string
+    public function cook(array $names = []): Embed|string
     {
-        return 'Not implemented yet!';
+        $ingredients = [];
+        $valid_names = [];
+        foreach ($names as $name) if ($ingredient = new Ingredient($this->materials_collection->get('Euen name', $name))) {
+            $ingredients[] = $ingredient;
+            $valid_names[] = $name;
+        }
+        var_dump('[OUTPUT]', $output = $this->crafter->process($ingredients));
+        if (!$valid_names) return 'No valid ingredients were provided';
+
+        $embed = new Embed($this->discord);
+        $embed->setTitle('Cooking Pot');
+        $embed->addFieldValues('Valid Ingredients',  implode(', ', $valid_names));
+        if (isset($output['Meal'])) {
+            if (isset($output['Meal']['Euen name'])) $embed->addFieldValues('Recipe', $output['Meal']['Euen name'], true);
+            if (isset($output['Meal']['Recipe n°'])) $embed->addFieldValues('Recipe n°', $output['Meal']['Recipe n°'], true);
+
+            //$embed->addFieldValues('Required Ingredients', $output['Meal']['Recipe'], true);
+            $embed->addFieldValues('Meal Name', $output['Meal Name']);
+            if (isset($output['EffectType'])) $embed->addFieldValues('Effect Type', $output['EffectType']);
+            if (isset($output['EffectLevel'])) $embed->addFieldValues('Effect Type', $output['EffectLevel']);
+            if (isset($output['HitPointRepair'])) $embed->addFieldValues('Effect Type', $output['HitPointRepair']);
+            if (isset($output['ConfirmedTime'])) $embed->addFieldValues('Effect Type', $output['ConfirmedTime']);
+            if (isset($output['HitPointRecover'])) $embed->addFieldValues('Effect Type', $output['HitPointRecover']);
+            if (isset($output['LifeMaxUp'])) $embed->addFieldValues('Effect Type', $output['LifeMaxUp']);
+            if (isset($output['StaminaRecover'])) $embed->addFieldValues('Effect Type', $output['StaminaRecover']);
+            if (isset($output['ExStamina'])) $embed->addFieldValues('Effect Type', $output['ExStamina']);
+            if (isset($output['CriticalChance'])) $embed->addFieldValues('Effect Type', $output['CriticalChance']);
+            return $embed;
+        }
+        return 'Not implemented yet!'; //The recipe didn't result in a valid meal
     }
 }

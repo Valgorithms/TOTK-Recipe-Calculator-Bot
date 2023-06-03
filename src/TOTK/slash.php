@@ -107,7 +107,15 @@ class Slash
 
         $this->TOTK->discord->listenCommand('cook', function ($interaction): void
         {
-            $interaction->respondWithMessage(MessageBuilder::new()->setContent($this->TOTK->cook([$interaction->data->options['ingredient1']->value, $interaction->data->options['ingredient2']->value, $interaction->data->options['ingredient3']->value, $interaction->data->options['ingredient4']->value, $interaction->data->options['ingredient5']->value])));
+            $ingredients = [];
+            if (isset($interaction->data->options['ingredient1'])) $ingredients[] = $interaction->data->options['ingredient1']->value;
+            if (isset($interaction->data->options['ingredient2'])) $ingredients[] = $interaction->data->options['ingredient2']->value;
+            if (isset($interaction->data->options['ingredient3'])) $ingredients[] = $interaction->data->options['ingredient3']->value;
+            if (isset($interaction->data->options['ingredient4'])) $ingredients[] = $interaction->data->options['ingredient4']->value;
+            if (isset($interaction->data->options['ingredient5'])) $ingredients[] = $interaction->data->options['ingredient5']->value;
+            $output = $this->TOTK->cook($ingredients);
+            if (is_string($output)) $interaction->respondWithMessage(MessageBuilder::new()->setContent($output));
+            else $interaction->respondWithMessage(MessageBuilder::new()->addEmbed($output));
         });
     }
 }
