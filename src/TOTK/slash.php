@@ -91,6 +91,30 @@ class Slash
             $commands->save($command);
         }
 
+        //if ($command = $commands->get('name', 'recipe')) $commands->delete($command->id);
+        if (! $commands->get('name', 'recipe')) {
+            $command = new \Discord\Parts\Interactions\Command\Command($this->TOTK->discord, [
+                'name'			=> 'recipe',
+                'description'	=> 'Look up some recipes to cook!',
+                'dm_permission' => false,
+                'options'		=> [
+                    [
+                        'name'			=> 'value',
+                        'description'	=> 'The Recipe n° (1-228) or the *exact* case-sensitive spelling of the Recipe or internal name.',
+                        'type'			=>  3,
+                        'required'		=> true,
+                    ],
+                    [
+                        'name'			=> 'key',
+                        'description'	=> 'Either "Number", "Name", or "Internal". Defaults to "Number" if left blank or invalid.',
+                        'type'			=>  3,
+                        'required'		=> false,
+                    ]
+                ]
+            ]);
+            $commands->save($command);
+        }
+
         $this->declareListeners();
     }
     public function declareListeners()
@@ -114,6 +138,32 @@ class Slash
             if (isset($interaction->data->options['ingredient4'])) $ingredients[] = $interaction->data->options['ingredient4']->value;
             if (isset($interaction->data->options['ingredient5'])) $ingredients[] = $interaction->data->options['ingredient5']->value;
             $output = $this->TOTK->cook($ingredients);
+            if (is_string($output)) $interaction->respondWithMessage(MessageBuilder::new()->setContent($output));
+            else $interaction->respondWithMessage(MessageBuilder::new()->addEmbed($output));
+        });
+
+        $this->TOTK->discord->listenCommand('recipe', function ($interaction): void
+        {
+            if (is_numeric($key = $interaction->data->options['value']->value)) $key = 'Recipe n°';
+            elseif (is_string($key = $interaction->data->options['key']->value ?? 'name')) {
+                switch (strtolower($key)) {
+                    case 'actor':
+                    case 'actor name':
+                    case 'actorname':
+                    case 'internal':
+                    case 'internal name':
+                    case 'internalname':
+                        $key = 'ActorName';
+                        break;
+                    case 'euen':
+                    case 'euen name':
+                    case 'euenname':
+                    case 'name':
+                    default:
+                        $key = 'Euen name';
+                }
+            }
+            $output = $this->TOTK->recipe($interaction->data->options['value']->value, $key);
             if (is_string($output)) $interaction->respondWithMessage(MessageBuilder::new()->setContent($output));
             else $interaction->respondWithMessage(MessageBuilder::new()->addEmbed($output));
         });

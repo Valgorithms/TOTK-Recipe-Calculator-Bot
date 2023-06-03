@@ -73,6 +73,8 @@ class TOTK
     public Crafter $crafter;
     public array $materials = [];
     public Collection $materials_collection;
+    public array $meals = [];
+    public Collection $meals_collection;
     /**
      * Creates a TOTK client instance.
      * 
@@ -95,6 +97,21 @@ class TOTK
         $materials_collection = new Collection([], $keys[2]);
         foreach ($materials as $array) $materials_collection->pushItem($array);
         $this->materials_collection = $materials_collection;
+
+        if (! $meals_csv = @file(getcwd() . '\vendor\vzgcoders\totk-recipe-calculator\src\TOTK\CSVs\meals.csv')) $meals_csv = file(getcwd() . '\src\TOTK\CSVs\meals.csv');
+        $csv = array_map('str_getcsv', $meals_csv);
+        $keys = array_shift($csv);
+        $keys[] = 'id';
+        $meals = array();
+        $id = 0;
+        foreach ($csv as $row) {
+            $row[] = $id++;
+            $meals[] = array_combine($keys, $row);
+        }
+        $this->meals = $meals;
+        $meals_collection = new Collection([], 'id');
+        foreach ($meals as $array) $meals_collection->pushItem($array);
+        $this->meals_collection = $meals_collection;
         
         $options = $this->resolveOptions($options);
         
@@ -308,9 +325,7 @@ class TOTK
         if (isset($output['Meal'])) {
             if (isset($output['Meal']['Euen name'])) $embed->addFieldValues('Recipe', $output['Meal']['Euen name'], true);
             if (isset($output['Meal']['Recipe n°'])) $embed->addFieldValues('Recipe n°', $output['Meal']['Recipe n°'], true);
-
             //$embed->addFieldValues('Required Ingredients', $output['Meal']['Recipe'], true);
-            $embed->addFieldValues('Meal Name', $output['Meal Name']);
             if (isset($output['EffectType'])) $embed->addFieldValues('Effect Type', $output['EffectType']);
             if (isset($output['EffectLevel'])) $embed->addFieldValues('Effect Type', $output['EffectLevel']);
             if (isset($output['HitPointRepair'])) $embed->addFieldValues('Effect Type', $output['HitPointRepair']);
@@ -323,5 +338,40 @@ class TOTK
             return $embed;
         }
         return 'Not implemented yet!'; //The recipe didn't result in a valid meal
+    }
+
+    public function recipe($value = 1, $key = 'Recipe n°'): Embed|string
+    {
+        $meals = $this->meals_collection->filter( function($meal) use ($key, $value) { return $meal[$key] == $value; });
+        var_dump('[MEAL]', $meal = $meals->first());
+        if (!$meal) return 'No meal found';
+
+        $embed = new Embed($this->discord);
+        $embed->setTitle('Recipe Lookup');
+        //$ActorName = $meal['ActorName'] ?? '';
+        $EuenName = $meal['Euen name'] ?? '';
+        $Recipen° = $meal['Recipe n°'] ?? '';
+        $Recipes = [];
+        foreach ($meals as $m) if (isset($m['Recipe'])) $Recipes[] = $m['Recipe'];
+        $BonusHeart = $meal['BonusHeart'] ? $meal['BonusHeart'] : 0;
+        $BonusLevel = $meal['BonusLevel'] ? $meal['BonusLevel'] : 0;
+        $BonusTime = $meal['BonusTime'] ? $meal['BonusTime'] : 0;
+
+        if ($EuenName) $embed->addFieldValues('Euen name', $EuenName);
+        if ($Recipen°) $embed->addFieldValues('Recipe n°', $Recipen°);
+        if ($Recipes) {
+            $formatted_recipes = [];
+            $int = 1;
+            foreach ($Recipes as $recipe) {
+                $formatted_recipes[] = "$int: `$recipe`";
+                $int++;
+            }
+            $embed->addFieldValues('Recipe', implode(PHP_EOL, $formatted_recipes));
+        }
+        if ($BonusHeart) $embed->addFieldValues('Bonus Heart', $BonusHeart, true);
+        if ($BonusLevel) $embed->addFieldValues('Bonus Level', $BonusLevel, true);
+        if ($BonusTime) $embed->addFieldValues('Bonus Time', $BonusTime, true);
+
+        return $embed;
     }
 }
