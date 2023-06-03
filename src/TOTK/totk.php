@@ -330,7 +330,7 @@ class TOTK
                     $ingredient = null;
                 }
                 if ($ingredient) {
-                    $ingredients[] = "`$ingredient`";
+                    $ingredients[] = $ingredient;
                     $valid_names[] = "`{$ingredient->getEuenName()}`";
                 }
             }
@@ -341,8 +341,8 @@ class TOTK
         $embed = new Embed($this->discord);
         $embed->setTitle('Cooking Pot');
         $embed->addFieldValues('Search Terms',  implode(', ', $search_terms));
-        $embed->addFieldValues('Valid Ingredients',  implode(', ', $valid_names));
-        $embed->addFieldValues('Invalid Ingredients',  implode(', ', $invalid_names));
+        if ($valid_names) $embed->addFieldValues('Valid Ingredients',  implode(', ', $valid_names));
+        if ($invalid_names) $embed->addFieldValues('Invalid Ingredients',  implode(', ', $invalid_names));
         if (isset($output['Meal'])) {
             if (isset($output['Meal']['Euen name'])) $embed->addFieldValues('Recipe', $output['Meal']['Euen name'], true);
             if (isset($output['Meal']['Recipe n°'])) $embed->addFieldValues('Recipe n°', $output['Meal']['Recipe n°'], true);
