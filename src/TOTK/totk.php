@@ -33,7 +33,6 @@ use TOTK\Parts\Ingredient;
 
 class TOTK
 {
-
     public Slash $slash;
 
     public StreamSelectLoop $loop;
@@ -311,24 +310,39 @@ class TOTK
     public function cook(array $names = []): Embed|string
     {
         $ingredients = [];
+        $search_terms = [];
         $valid_names = [];
+        $invalid_names = [];
         foreach ($names as $name) {
-            try { $ingredient = new Ingredient($this->materials_collection->get('Euen name', $name)); }
-            catch (\Error $e) {
-                $this->logger->warning($e->getMessage());
-                $ingredient = null;
-            }
-            if ($ingredient) {
-                $ingredients[] = $ingredient;
-                $valid_names[] = $name;
+            $search_terms[] = "`$name`";
+            $materials = $this->materials_collection->filter(function($ingredient) use ($name) { return (
+                (  (strtolower($ingredient['Euen name'] == strtolower($name)))
+                || (str_starts_with(strtolower($ingredient['Euen name']), strtolower($name))/* || str_ends_with(strtolower($ingredient['Euen name']*), strtolower($name))*/)
+                || (! str_starts_with(strtolower($ingredient['Euen name']), strtolower($name)) && str_ends_with(strtolower($ingredient['Euen name']), strtolower($name)))
+                || (! str_starts_with(strtolower($ingredient['Euen name']), strtolower($name)) && ! str_ends_with(strtolower($ingredient['Euen name']), strtolower($name)) && str_contains(strtolower($ingredient['Euen name']), strtolower($name)))
+                )
+            );});
+            if (! $materials->count()) $invalid_names = [$name];
+            else {
+                try { $ingredient = new Ingredient($this->materials_collection->get('Euen name', $materials->first()['Euen name'])); }
+                catch (\Error $e) {
+                    $this->logger->warning($e->getMessage());
+                    $ingredient = null;
+                }
+                if ($ingredient) {
+                    $ingredients[] = $ingredient;
+                    $valid_names[] = $materials->first()['Euen name'];
+                }
             }
         }
-        if (!$valid_names) return 'No valid ingredients were provided';
+        if (! $valid_names) return 'No valid ingredients were provided';
         var_dump('[OUTPUT]', $output = $this->crafter->process($ingredients));
 
         $embed = new Embed($this->discord);
         $embed->setTitle('Cooking Pot');
+        $embed->addFieldValues('Search Terms',  implode(', ', $search_terms));
         $embed->addFieldValues('Valid Ingredients',  implode(', ', $valid_names));
+        $embed->addFieldValues('Invalid Ingredients',  implode(', ', $invalid_names));
         if (isset($output['Meal'])) {
             if (isset($output['Meal']['Euen name'])) $embed->addFieldValues('Recipe', $output['Meal']['Euen name'], true);
             if (isset($output['Meal']['Recipe n°'])) $embed->addFieldValues('Recipe n°', $output['Meal']['Recipe n°'], true);
@@ -349,7 +363,14 @@ class TOTK
 
     public function recipe($value = 1, $key = 'Recipe n°'): Embed|string
     {
-        $meals = $this->meals_collection->filter( function($meal) use ($key, $value) { return $meal[$key] == $value; });
+        $meals = $this->meals_collection->filter( function($meal) use ($key, $value) { //return str_starts_with(strtolower($meal[$key]), strtolower($value)); });
+        return (
+            (  (strtolower($meal[$key] == strtolower($value)))
+            || (str_starts_with(strtolower($meal[$key]), strtolower($value))/* || str_ends_with(strtolower($ingredient['Euen name']*), strtolower($name))*/)
+            || (! str_starts_with(strtolower($meal[$key]), strtolower($value)) && str_ends_with(strtolower($meal[$key]), strtolower($value)))
+            || (! str_starts_with(strtolower($meal[$key]), strtolower($value)) && ! str_ends_with(strtolower($meal[$key]), strtolower($value)) && str_contains(strtolower($meal[$key]), strtolower($value)))
+            )
+        );});
         var_dump('[MEAL]', $meal = $meals->first());
         if (!$meal) return 'No meal found';
 
@@ -364,6 +385,7 @@ class TOTK
         $BonusLevel = $meal['BonusLevel'] ? $meal['BonusLevel'] : 0;
         $BonusTime = $meal['BonusTime'] ? $meal['BonusTime'] : 0;
 
+        $embed->addFieldValues('Search Term', "`$value`");
         if ($EuenName) $embed->addFieldValues('Euen name', $EuenName);
         if ($Recipen°) $embed->addFieldValues('Recipe n°', $Recipen°);
         if ($Recipes) {
