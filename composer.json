@@ -17,6 +17,17 @@
         "team-reflex/discord-php": "dev-master",
         "vzgcoders/totk-recipe-calculator": "dev-main"
     },
+	"autoload": {
+        "files": [
+            "src/TOTK/totk.php",
+            "src/TOTK/stats_object.php",
+            "src/TOTK/variable_functions.php",
+            "src/TOTK/functions.php"
+        ],
+        "psr-4": {
+            "TOTK\\": "src/TOTK"
+        }
+    },
     "minimum-stability": "dev",
     "prefer-stable": true
 }

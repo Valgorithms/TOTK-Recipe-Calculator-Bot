@@ -9,9 +9,20 @@
  * with this source code in the LICENSE.md file.
  */
 
-use \TOTK\Crafter;
-use \TOTK\Helpers\Collection;
-use \TOTK\Parts\Ingredient;
+
+ use \TOTK\TOTK;
+ use \TOTK\Stats;
+ use \Discord\Discord;
+ use \Discord\Helpers\CacheConfig;
+ use \React\EventLoop\Loop;
+ use \WyriHaximus\React\Cache\Redis as RedisCache;
+ use \Clue\React\Redis\Factory as Redis;
+ use \Monolog\Logger;
+ use \Monolog\Level;
+ use \Monolog\Formatter\LineFormatter;
+ use \Monolog\Handler\StreamHandler;
+ use \Discord\WebSockets\Intents;
+ use \React\Http\Browser;
 
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
@@ -19,12 +30,92 @@ set_time_limit(0);
 ignore_user_abort(1);
 ini_set('max_execution_time', 0);
 ini_set('memory_limit', '-1'); //Unlimited memory usage
-if (! include getcwd() . '/vendor/autoload.php') {
-    include __DIR__ . '/src/TOTK/crafter.php';
-    include __DIR__ . '/src/TOTK/Helpers/collection.php';
-    include __DIR__ . '/src/TOTK/Parts/ingredient.php';
+if (! @include getcwd() . '/vendor/autoload.php') {
+    include __DIR__ . '/src/TOTK/totk.php';
+    include __DIR__ . '/src/TOTK/stats_object.php';
+    include __DIR__ . '/src/TOTK/variable_functions.php';
+    include __DIR__ . '/src/TOTK/functions.php';
 }
+include __DIR__ . '/src/TOTK/variable_functions.php';
 
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
+set_time_limit(0);
+ignore_user_abort(1);
+ini_set('max_execution_time', 0);
+ini_set('memory_limit', '-1'); //Unlimited memory usage
+define('MAIN_INCLUDED', 1); //Token and SQL credential files may be protected locally and require this to be defined to access
+require getcwd() . '/token.php'; //$token
+
+$loop = Loop::get();
+$streamHandler = new StreamHandler('php://stdout', Level::Debug);
+$streamHandler->setFormatter(new LineFormatter(null, null, true, true));
+$logger = new Logger('TOTK', [$streamHandler]);
+$discord = new Discord([
+    'loop' => $loop,
+    'logger' => $logger,
+    /* //Disabled for debugging
+    'cache' => new CacheConfig(
+        $interface = new RedisCache(
+            (new Redis($loop))->createLazyClient('127.0.0.1:6379'),
+            'dphp:cache:
+        '),
+        $compress = true, // Enable compression if desired
+        $sweep = false // Disable automatic cache sweeping if desired
+    ), 
+    */
+    /*'socket_options' => [
+        'dns' => '8.8.8.8', // can change dns
+    ],*/
+    'token' => $token,
+    'loadAllMembers' => true,
+    'storeMessages' => true, //Because why not?
+    'intents' => Intents::getDefaultIntents() | Intents::GUILD_MEMBERS | Intents::MESSAGE_CONTENT,
+]);
+$stats = new Stats();
+$stats->init($discord);
+
+$options = array(
+    'loop' => $loop,
+    'discord' => $discord,
+    'logger' => $logger,
+    'stats' => $stats,
+    
+    //Configurations
+    'github' => 'https://github.com/VZGCoders/TOTK-Recipe-Calculator-Bot/',
+    'command_symbol' => '@TOTK',
+    'owner_id' => '68828609288077312', //Rattlecat
+    'technician_id' => '116927250145869826', //Valithor
+    'totk_guild_id' => '1017158025770967133', //The First Oven
+    'files' => array(
+        'status_path' => 'status.txt',
+    ),
+    'channel_ids' => array(),
+    'role_ids' => array(),
+    'functions' => array(
+        'ready' => [
+            //'on_ready' => $on_ready,
+            'status_changer_timer' => $status_changer_timer,
+            'status_changer_random' => $status_changer_random,
+        ],
+        'message' => [
+            'on_message' => $on_message,
+        ],
+    ),
+);
+if (@include 'totk_token.php') $options['totk_token'] = $TOTK_token; //NYI
+$TOTK = new TOTK($options);
+if (! @include getcwd() . '/vendor/vzgcoders/TOTK/autoload.php') {
+    include __DIR__ . '/src/TOTK/webapi.php';
+}
+$TOTK->run();
+
+
+/*
+use \TOTK\Parts\Ingredient;
+use \TOTK\Crafter;
+use \TOTK\Helpers\Collection;
 
 $crafter = new Crafter();
 
@@ -36,129 +127,6 @@ foreach ($csv as $row) $materials[] = array_combine($keys, $row);
 $materials_collection = new Collection([], $keys[2]);
 foreach ($materials as $array) $materials_collection->pushItem($array);
 
-//var_dump($materials_collection);
-//$ingredient1 = new Ingredient($materials_collection->get('Euen name', 'Hydromelon'));
-/*
-$ingredient2 = new Ingredient(
-    'Item_Fruit_F', //Internal name
-    'Hydromelon', //Actual name
-    'Food', //Food, Elixer
-    false, //Rock Hard?
-    16, //Buying price
-    4, //Selling price
-    1, //Potency
-    'ResistHot',  //Buff [LifeRecover, LifeMaxUp, StaminaRecover, ExStaminaMaxUp, ResistHot, ResistCold, ResistElectric, AllSpeed, AttackUp, DefenseUp, QuietnessUp, ResistBurn,, TwiceJump, EmergencyAvoid, LifeRepair, LightEmission, NotSlippy, SwimSpeedUp, AttackUpCold,AttackUpHot, AttackUpThunderstorm, MiasmaGuard]
-    900, //Duration
-    2 //Hitpoint Recovery (Quarters of a Heart)
-);
-$ingredient3 = new Ingredient(
-    'Item_Fruit_F', //Internal name
-    'Hydromelon', //Actual name
-    'Food', //Food, Elixer
-    false, //Rock Hard?
-    16, //Buying price
-    4, //Selling price
-    1, //Potency
-    'ResistHot',  //Buff [LifeRecover, LifeMaxUp, StaminaRecover, ExStaminaMaxUp, ResistHot, ResistCold, ResistElectric, AllSpeed, AttackUp, DefenseUp, QuietnessUp, ResistBurn,, TwiceJump, EmergencyAvoid, LifeRepair, LightEmission, NotSlippy, SwimSpeedUp, AttackUpCold,AttackUpHot, AttackUpThunderstorm, MiasmaGuard]
-    900, //Duration
-    2 //Hitpoint Recovery (Quarters of a Heart)
-);
-$ingredient4 = new Ingredient(
-    'Item_Fruit_F', //Internal name
-    'Hydromelon', //Actual name
-    'Food', //Food, Elixer
-    false, //Rock Hard?
-    16, //Buying price
-    4, //Selling price
-    1, //Potency
-    'ResistHot',  //Buff [LifeRecover, LifeMaxUp, StaminaRecover, ExStaminaMaxUp, ResistHot, ResistCold, ResistElectric, AllSpeed, AttackUp, DefenseUp, QuietnessUp, ResistBurn,, TwiceJump, EmergencyAvoid, LifeRepair, LightEmission, NotSlippy, SwimSpeedUp, AttackUpCold,AttackUpHot, AttackUpThunderstorm, MiasmaGuard]
-    900, //Duration
-    2 //Hitpoint Recovery (Quarters of a Heart)
-);
-$ingredient5 = new Ingredient(
-    'Item_Fruit_F', //Internal name
-    'Hydromelon', //Actual name
-    'Food', //Food, Elixer
-    false, //Rock Hard?
-    16, //Buying price
-    4, //Selling price
-    1, //Potency
-    'ResistHot',  //Buff [LifeRecover, LifeMaxUp, StaminaRecover, ExStaminaMaxUp, ResistHot, ResistCold, ResistElectric, AllSpeed, AttackUp, DefenseUp, QuietnessUp, ResistBurn,, TwiceJump, EmergencyAvoid, LifeRepair, LightEmission, NotSlippy, SwimSpeedUp, AttackUpCold,AttackUpHot, AttackUpThunderstorm, MiasmaGuard]
-    900, //Duration
-    2 //Hitpoint Recovery (Quarters of a Heart)
-);*/
-
-/* Fruity Tomato Soup
-$ingredient1 = new Ingredient($materials_collection->get('Euen name', 'Hylian Tomato'));
-$ingredient2 = new Ingredient($materials_collection->get('Euen name', 'Fresh Milk'));
-$ingredient3 = new Ingredient($materials_collection->get('Euen name', 'Rock Salt'));
-*/
-
-/* Tough Veggie Cream Soup
-$ingredient1 = new Ingredient($materials_collection->get('Euen name', 'Fortified Pumpkin'));
-$ingredient2 = new Ingredient($materials_collection->get('Euen name', 'Rock Salt'));
-$ingredient3 = new Ingredient($materials_collection->get('Euen name', 'Fresh Milk'));
-$ingredient4 = new Ingredient($materials_collection->get('Euen name', 'Fresh Milk'));
-$ingredient5 = new Ingredient($materials_collection->get('Euen name', 'Raw Bird Thigh'));
-*/
-
-
-/* Monster Curry
-$ingredient1 = new Ingredient($materials_collection->get('Euen name', 'Hylian Rice'));
-$ingredient2 = new Ingredient($materials_collection->get('Euen name', 'Goron Spice'));
-$ingredient3 = new Ingredient($materials_collection->get('Euen name', 'Monster Extract'));
-*/
-
-/* Carrot Stew
-$ingredient1 = new Ingredient($materials_collection->get('Euen name', 'Endura Carrot'));
-$ingredient2 = new Ingredient($materials_collection->get('Euen name', 'Goat Butter'));
-$ingredient3 = new Ingredient($materials_collection->get('Euen name', 'Fresh Milk'));
-$ingredient4 = new Ingredient($materials_collection->get('Euen name', 'Tabantha Wheat'));
-$ingredient5 = new Ingredient($materials_collection->get('Euen name', 'Fairy'));
-*/
-
-
-/* Hearty Salmon Meunière
-$ingredient1 = new Ingredient($materials_collection->get('Euen name', 'Hearty Salmon'));
-$ingredient2 = new Ingredient($materials_collection->get('Euen name', 'Goat Butter'));
-$ingredient3 = new Ingredient($materials_collection->get('Euen name', 'Tabantha Wheat'));
-$ingredient4 = new Ingredient($materials_collection->get('Euen name', 'Fairy'));
-$ingredient5 = new Ingredient($materials_collection->get('Euen name', 'Endura Carrot'));
-*/
-
-/* Salmon Risotto
-$ingredient1 = new Ingredient($materials_collection->get('Euen name', 'Razorclaw Crab'));
-$ingredient2 = new Ingredient($materials_collection->get('Euen name', 'Hylian Rice'));
-$ingredient3 = new Ingredient($materials_collection->get('Euen name', 'Rock Salt'));
-$ingredient4 = new Ingredient($materials_collection->get('Euen name', 'Goat Butter'));
-$ingredient5 = new Ingredient($materials_collection->get('Euen name', 'Hearty Salmon'));
-*/
-
-/* Crab Risotto
-$ingredient2 = new Ingredient($materials_collection->get('Euen name', 'Hyrule Bass'));
-$ingredient2 = new Ingredient($materials_collection->get('Euen name', 'Bright-Eyed Crab'));
-$ingredient3 = new Ingredient($materials_collection->get('Euen name', 'Rock Salt'));
-$ingredient4 = new Ingredient($materials_collection->get('Euen name', 'Hylian Rice'));
-$ingredient5 = new Ingredient($materials_collection->get('Euen name', 'Goat Butter'));
-*/
-
-/* Seafood Paella
-$ingredient1 = new Ingredient($materials_collection->get('Euen name', 'Armored Porgy'));
-$ingredient2 = new Ingredient($materials_collection->get('Euen name', 'Razorclaw Crab'));
-$ingredient3 = new Ingredient($materials_collection->get('Euen name', 'Hylian Rice'));
-$ingredient4 = new Ingredient($materials_collection->get('Euen name', 'Rock Salt'));
-$ingredient5 = new Ingredient($materials_collection->get('Euen name', 'Goat Butter'));
-*/
-
-/* Seafood Rice Balls (Test failed, last in list) (Patched by reversing array if no recipe containing generic categories were found in the highest ordered recipes)
-$ingredient1 = new Ingredient($materials_collection->get('Euen name', 'Hyrule Bass'));
-$ingredient2 = new Ingredient($materials_collection->get('Euen name', 'Sneaky River Snail'));
-$ingredient3 = new Ingredient($materials_collection->get('Euen name', 'Rock Salt'));
-$ingredient4 = new Ingredient($materials_collection->get('Euen name', 'Hylian Rice'));
-$ingredient5 = new Ingredient($materials_collection->get('Euen name', 'Goat Butter'));
-*/
-
-// Fruitcake (Test failed, Array to string conversion) (Patched by adding 'continue 2' inside of 'foreach ($opt as $o)' for parsed['optional']
 $ingredient1 = new Ingredient($materials_collection->get('Euen name', 'Apple'));
 $ingredient2 = new Ingredient($materials_collection->get('Euen name', 'Wildberry'));
 $ingredient3 = new Ingredient($materials_collection->get('Euen name', 'Cane Sugar'));
@@ -175,3 +143,4 @@ var_dump('[MEAL]', $meal = $crafter->process($ingredients));
 //$recipe = new Recipe($meal, $ingredients);
 //var_dump('[RECIPE]', $recipe); //Recipe needs to be fixed to remove the hardcoded stuff like Rock Hard and Dubious Food, because we find out what the actual meal output is by using the crafter->process() method
 //var_dump('POSSIBLE MEAL', $meal = $result[0]);
+*/
