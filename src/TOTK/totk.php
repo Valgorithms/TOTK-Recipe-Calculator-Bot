@@ -390,17 +390,29 @@ class TOTK
         $embed->addFieldValues('Search Term', "`$value`");
         if ($Recipes) {
             $EuenNames = [];
+            $EuenNames_strlen = 0;
             $Recipen°s = [];
+            $Recipen°s_strlen = 0;
             $Recipen°Names = [];
             $formatted_recipes = [];
+            $formatted_recipes_strlen = 0;
             $int = 1;
             foreach ($Recipes as $recipe) {
                 if (!in_array($EuenName, $Recipen°Names)) {
                     $Recipen°Names[] = $EuenName;
-                    $EuenNames[] = "$int: `$EuenName`";
-                    $Recipen°s[] = "$int: `$Recipen°`";
+                    if (($s = strlen("$int: `$EuenName`") + $EuenNames_strlen) < 1024) {
+                        $EuenNames_strlen + $s;
+                        $EuenNames[] = "$int: `$EuenName`";
+                    }
+                    if (($s = strlen("$int: `$Recipen°`") + $Recipen°s_strlen) < 1024) {
+                        $Recipen°s_strlen = $s;
+                        $Recipen°s[] = "$int: `$Recipen°`";
+                    }
                 }
-                $formatted_recipes[] = "$int: `$recipe`";
+                if (($s = strlen("$int: `$recipe`") + $formatted_recipes_strlen) < 1024) {
+                    $formatted_recipes_strlen = $s;
+                    $formatted_recipes[] ="$int: `$recipe`";
+                }
                 $int++;
             }
             if ($EuenNames) $embed->addFieldValues('Euen name', implode(', ', $EuenNames), true);
