@@ -285,23 +285,6 @@ class Slash
                     case 'boost':
                         $key = 'SeasoningBoost';
                         break;
-                    case 'alwayscrit':
-                    case 'alwayscrits':
-                    case 'always crit':
-                    case 'always crits':
-                    case 'crit':
-                    case 'critchance':
-                    case 'crit chance':
-                    case 'critical':
-                    case 'criticalchance':
-                    case 'critical chance':
-                    case 'crit%':
-                    case 'crit %':
-                    case 'critical%':
-                    case 'critical %':
-                    case '%':
-                        $key = 'AlwaysCrit';
-                        break;
                     case 'duration':
                     case 'dur':
                     case 'time':

@@ -110,37 +110,3 @@ if (! @include getcwd() . '/vendor/vzgcoders/TOTK/autoload.php') {
     include __DIR__ . '/src/TOTK/webapi.php';
 }
 $TOTK->run();
-
-
-/*
-use \TOTK\Parts\Ingredient;
-use \TOTK\Crafter;
-use \TOTK\Helpers\Collection;
-
-$crafter = new Crafter();
-
-if (! $materials_file = file(__DIR__ . '\vendor\vzgcoders\totk-recipe-calculator\src\TOTK\CSVs\materials.csv')) $materials_file = file(__DIR__ . '\src\TOTK\CSVs\materials.csv');
-$csv = array_map('str_getcsv', $materials_file);
-$keys = array_shift($csv);
-$materials = array();
-foreach ($csv as $row) $materials[] = array_combine($keys, $row);
-$materials_collection = new Collection([], $keys[2]);
-foreach ($materials as $array) $materials_collection->pushItem($array);
-
-$ingredient1 = new Ingredient($materials_collection->get('Euen name', 'Apple'));
-$ingredient2 = new Ingredient($materials_collection->get('Euen name', 'Wildberry'));
-$ingredient3 = new Ingredient($materials_collection->get('Euen name', 'Cane Sugar'));
-$ingredient4 = new Ingredient($materials_collection->get('Euen name', 'Tabantha Wheat'));
-$ingredient5 = null;
-
-
-
-$ingredients = [$ingredient1 ?? NULL, $ingredient2 ?? NULL, $ingredient3 ?? NULL, $ingredient4 ?? NULL, $ingredient5 ?? NULL];
-//var_dump('[INGREDIENTS]', $ingredients);
-
-var_dump('[MEAL]', $meal = $crafter->process($ingredients));
-
-//$recipe = new Recipe($meal, $ingredients);
-//var_dump('[RECIPE]', $recipe); //Recipe needs to be fixed to remove the hardcoded stuff like Rock Hard and Dubious Food, because we find out what the actual meal output is by using the crafter->process() method
-//var_dump('POSSIBLE MEAL', $meal = $result[0]);
-*/
