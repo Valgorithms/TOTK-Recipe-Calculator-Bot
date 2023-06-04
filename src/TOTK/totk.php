@@ -461,11 +461,16 @@ class TOTK
         );});
         if (! $materials->count()) return "No ingredient found for search term `$value` with key `$key`";
         
-        //Only show the first result
-        if (! $material = $materials->first()) return "No ingredient found for search term `$value` with key `$key`";
         $ingredients = [];
-        $ingredient = new Ingredient($material);
-        $ingredients[] = $ingredient;
+        $material = $materials->first(); //Only show the first result
+        try { 
+            $ingredient = new Ingredient($material);
+            $ingredients[] = $ingredient;
+        }
+        catch (\Error $e) {
+            $this->logger->warning($e->getMessage());
+            return "No ingredient found for search term `$value` with key `$key`";
+        }
         $embed = new Embed($this->discord);
         $embed->setFooter($this->embed_footer);
         $embed->addFieldValues('Search Term', "`$value`", true);
