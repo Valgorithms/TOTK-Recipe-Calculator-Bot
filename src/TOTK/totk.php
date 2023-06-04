@@ -407,7 +407,7 @@ class TOTK
         $int = 1;
         foreach ($EuenNames_original as $EuenName) {
             if (($s = strlen(implode(PHP_EOL, $EuenNames) . ($str = "$int: `$EuenName`")) + $EuenNames_strlen) < 1024) {
-                if (! in_array($str, $EuenNames_dupes)) {
+                if (! in_array($EuenName, $EuenNames_dupes)) {
                     $EuenNames[] = $str;
                     $EuenNames_strlen += $s;
                     $EuenNames_dupes[] = $EuenName;
@@ -418,7 +418,7 @@ class TOTK
         $int = 1;
         foreach ($Recipen°s_original as $Recipen°) {
             if (($s = strlen(implode(PHP_EOL, $Recipen°s) . ($str = "$int: `$Recipen°`")) + $Recipen°s_strlen) < 1024) {
-                if (! in_array($str, $Recipen°s_dupes)) {
+                if (! in_array($Recipen°, $Recipen°s_dupes)) {
                     $Recipen°s[] = $str;
                     $Recipen°s_strlen += $s;
                     $Recipen°s_dupes[] = $Recipen°;
@@ -429,7 +429,7 @@ class TOTK
         $int = 1;
         foreach ($Recipes_original as $Recipe) {
             if (($s = strlen(implode(PHP_EOL, $formatted_recipes) . ($str = "$int: `$Recipe`")) + $formatted_recipes_strlen) < 1024) {
-                if (! in_array($str, $formatted_recipes_dupes)) {
+                if (! in_array($Recipe, $formatted_recipes_dupes)) {
                     $formatted_recipes[] = $str;
                     $formatted_recipes_strlen += $s;
                     $formatted_recipes_dupes[] = $Recipe;
