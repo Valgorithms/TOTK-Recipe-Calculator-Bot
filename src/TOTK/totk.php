@@ -352,7 +352,7 @@ class TOTK
             if (isset($output['EffectLevel'])) $embed->addFieldValues('Effect Level (Potency)', $output['EffectLevel']);
             if (isset($output['Tier'])) $embed->addFieldValues('Tier', $output['Tier']);
             if (isset($output['HitPointRepair'])) $embed->addFieldValues('HitPointRepair', $output['HitPointRepair']);
-            if (isset($output['ConfirmedTime'])) $embed->addFieldValues('Duration', $output['ConfirmedTime']);
+            if (isset($output['Duration'])) $embed->addFieldValues('Duration', $output['Duration']);
             if (isset($output['HitPointRecover'])) $embed->addFieldValues('HitPointRecover (Quarter Hearts)', $output['HitPointRecover']);
             if (isset($output['LifeMaxUp'])) $embed->addFieldValues('Life Max Up', $output['LifeMaxUp']);
             if (isset($output['StaminaRecover'])) $embed->addFieldValues('StaminaRecover (Degrees)', $output['StaminaRecover']);
@@ -361,10 +361,16 @@ class TOTK
                 $embed->addFieldValues('Critical Chance', $output['CriticalChance']);
                 $rand_effects = '+3 Hearts Recovery';
                 $rand_effects .= PHP_EOL . '+1 Temporary Heart';
-                if (isset($output['ConfirmedTime'])) $rand_effects .= PHP_EOL . '+5 Minutes to Duration';
+                if (isset($output['Duration'])) $rand_effects .= PHP_EOL . '+5 Minutes to Duration';
                 if (isset($output['Tier'])) $rand_effects .= PHP_EOL . 'Increase Tier Level';
                 if (isset($output['ExStamina']) || isset($output['ExStamina'])) $rand_effects .= PHP_EOL . '+2/5ths Stamina or Extra Stamina Wheel';
                 $embed->addFieldValues('Random Possible Critical Effects', $rand_effects);
+            }
+            if (isset($output['hasMonsterExtract'])) if ($output['hasMonsterExtract']) {
+                $extract_effects = '';
+                if (isset($output['HitPointRecover'])) if ($output['HitPointRecover']) $extract_effects .= 'Either set HitPointRecover to 1 OR add 12' . PHP_EOL;
+                if (isset($output['Duration'])) if ($output['Duration']) $extract_effects .= 'Set Duration to either 60, 600, or 1800';
+                if ($extract_effects) $embed->addFieldValues('Monster Extract Effects', $extract_effects);
             }
             return $embed;
         }

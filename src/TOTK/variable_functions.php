@@ -11,7 +11,6 @@
 
 use TOTK\TOTK;
 use Discord\Builders\MessageBuilder;
-use Discord\Parts\Embed\Embed;
 use Discord\Parts\User\Activity;
 
 $status_changer_random = function (TOTK $TOTK): bool
