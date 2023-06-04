@@ -349,14 +349,14 @@ class TOTK
             if (isset($output['Meal']['Recipe n°'])) $embed->addFieldValues('Recipe n°', $output['Meal']['Recipe n°'], true);
             //$embed->addFieldValues('Required Ingredients', $output['Meal']['Recipe'], true);
             if (isset($output['EffectType'])) if ($output['EffectType'] !== 'None') $embed->addFieldValues('Effect Type', $output['EffectType']);
-            if (isset($output['EffectLevel'])) $embed->addFieldValues('Effect Level (Potency)', $output['EffectLevel']);
-            if (isset($output['Tier'])) $embed->addFieldValues('Tier', $output['Tier']);
+            if (isset($output['EffectLevel'])) $embed->addFieldValues('Effect Level (Potency)', $output['EffectLevel'], true);
+            if (isset($output['Tier'])) $embed->addFieldValues('Tier', $output['Tier'], true);
             if (isset($output['HitPointRepair'])) $embed->addFieldValues('HitPointRepair', $output['HitPointRepair']);
             if (isset($output['Duration'])) $embed->addFieldValues('Duration', $output['Duration']);
-            if (isset($output['HitPointRecover'])) $embed->addFieldValues('HitPointRecover (Quarter Hearts)', $output['HitPointRecover']);
-            if (isset($output['LifeMaxUp'])) $embed->addFieldValues('Life Max Up', $output['LifeMaxUp']);
-            if (isset($output['StaminaRecover'])) $embed->addFieldValues('StaminaRecover (Degrees)', $output['StaminaRecover']);
-            if (isset($output['ExStamina'])) $embed->addFieldValues('ExStamina (Degrees)', $output['ExStamina']);
+            if (isset($output['HitPointRecover'])) $embed->addFieldValues('HitPointRecover (Quarter Hearts)', $output['HitPointRecover'], true);
+            if (isset($output['LifeMaxUp'])) $embed->addFieldValues('Life Max Up', $output['LifeMaxUp'], true );
+            if (isset($output['StaminaRecover'])) $embed->addFieldValues('StaminaRecover (Degrees)', $output['StaminaRecover'], true);
+            if (isset($output['ExStamina'])) $embed->addFieldValues('ExStamina (Degrees)', $output['ExStamina'], true);
             if (isset($output['CriticalChance'])) if ($output['CriticalChance'] != 0) {
                 $embed->addFieldValues('Critical Chance', $output['CriticalChance']);
                 $rand_effects = '+3 Hearts Recovery';
