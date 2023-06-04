@@ -400,16 +400,16 @@ class TOTK
             foreach ($Recipes as $recipe) {
                 if (!in_array($EuenName, $Recipen°Names)) {
                     $Recipen°Names[] = $EuenName;
-                    if (($s = strlen("$int: `$EuenName`") + $EuenNames_strlen) < 1024) {
+                    if (($s = strlen(implode(', ', $EuenNames) . "$int: `$EuenName`") + $EuenNames_strlen) < 1024) {
                         $EuenNames_strlen += $s;
                         $EuenNames[] = "$int: `$EuenName`";
                     }
-                    if (($s = strlen("$int: `$Recipen°`") + $Recipen°s_strlen) < 1024) {
+                    if (($s = strlen(implode(', ', $Recipen°s) ."$int: `$Recipen°`") + $Recipen°s_strlen) < 1024) {
                         $Recipen°s_strlen += $s;
                         $Recipen°s[] = "$int: `$Recipen°`";
                     }
                 }
-                if (($s = strlen("$int: `$recipe`") + $formatted_recipes_strlen) < 1024) {
+                if (($s = strlen(implode(', ', $formatted_recipes) . "$int: `$recipe`") + $formatted_recipes_strlen) < 1024) {
                     $formatted_recipes_strlen += $s;
                     $formatted_recipes[] ="$int: `$recipe`";
                 }
