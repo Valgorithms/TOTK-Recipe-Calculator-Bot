@@ -410,7 +410,7 @@ class TOTK
                     }
                 }
                 if (($s = strlen(implode(', ', $formatted_recipes) . ($str = "$int: `$recipe`")) + $formatted_recipes_strlen) < 1024) {
-                    if (! in_array($str, $formatted_recipes[])) {
+                    if (! in_array($str, $formatted_recipes)) {
                         $formatted_recipes_strlen += $s;
                         $formatted_recipes[] = $str;
                     }
