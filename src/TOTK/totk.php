@@ -486,17 +486,17 @@ class TOTK
         $embed->addFieldValues('Ingredient', $ingredient->getEuenName());
         $embed->addFieldValues('Classification', $ingredient->getClassification(), true);
         $embed->addFieldValues('BuyingPrice', $ingredient->getBuyingPrice(), true);
-        $embed->addFieldValues('SellingPrice', $ingredient->getSellingPrice(), true);
+        if ($ingredient->getSellingPrice()) $embed->addFieldValues('SellingPrice', $ingredient->getSellingPrice(), true);
         $embed->addFieldValues('Color', $ingredient->getColor(), true);
-        $embed->addFieldValues('AdditionalDamage', $ingredient->getAdditionalDamage(), true);
-        $embed->addFieldValues('EffectLevel', $ingredient->getEffectLevel(), true);
-        $embed->addFieldValues('EffectType', $ingredient->getEffectType(), true);
-        $embed->addFieldValues('HitPointRecover', $ingredient->getHitPointRecover(), true);
-        $embed->addFieldValues('BoostEffectiveTime', $ingredient->getBoostEffectiveTime(), true);
-        $embed->addFieldValues('BoostHitPointRecover', $ingredient->getBoostHitPointRecover(), true);
-        $embed->addFieldValues('BoostMaxHeartLevel', $ingredient->getBoostMaxHeartLevel(), true);
-        $embed->addFieldValues('BoostStaminaLevel', $ingredient->getBoostStaminaLevel(), true);
-        $embed->addFieldValues('BoostSuccessRate', $ingredient->getBoostSuccessRate(), true);
+        if ($ingredient->getAdditionalDamage()) $embed->addFieldValues('AdditionalDamage', $ingredient->getAdditionalDamage(), true);
+        if ($ingredient->getEffectLevel()) $embed->addFieldValues('EffectLevel', $ingredient->getEffectLevel(), true);
+        if ($ingredient->getEffectType() !== 'None') $embed->addFieldValues('EffectType', $ingredient->getEffectType(), true);
+        if ($ingredient->getHitPointRecover()) $embed->addFieldValues('HitPointRecover', $ingredient->getHitPointRecover(), true);
+        if ($ingredient->getBoostEffectiveTime()) $embed->addFieldValues('BoostEffectiveTime', $ingredient->getBoostEffectiveTime(), true);
+        if ($ingredient->getBoostHitPointRecover()) $embed->addFieldValues('BoostHitPointRecover', $ingredient->getBoostHitPointRecover(), true);
+        if ($ingredient->getBoostMaxHeartLevel()) $embed->addFieldValues('BoostMaxHeartLevel', $ingredient->getBoostMaxHeartLevel(), true);
+        if ($ingredient->getBoostStaminaLevel()) $embed->addFieldValues('BoostStaminaLevel', $ingredient->getBoostStaminaLevel(), true);
+        if ($ingredient->getBoostSuccessRate()) $embed->addFieldValues('BoostSuccessRate', $ingredient->getBoostSuccessRate(), true);
         return $embed;
     }
 }
