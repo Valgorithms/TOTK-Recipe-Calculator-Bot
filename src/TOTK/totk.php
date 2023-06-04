@@ -482,8 +482,6 @@ class TOTK
         $embed->addFieldValues('AdditionalDamage', $ingredient->getAdditionalDamage(), true);
         $embed->addFieldValues('EffectLevel', $ingredient->getEffectLevel(), true);
         $embed->addFieldValues('EffectType', $ingredient->getEffectType(), true);
-        $embed->addFieldValues('Seasoning', $ingredient->getSeasoning(), true);
-        if (null !== $ingredient->getSeasoningBoost()) $embed->addFieldValues('SeasoningBoost', $ingredient->getSeasoningBoost(), true);
         $embed->addFieldValues('AlwaysCrits', $ingredient->getAlwaysCrits(), true);
         $embed->addFieldValues('ConfirmedTime', $ingredient->getConfirmedTime(), true);
         $embed->addFieldValues('HitPointRecover', $ingredient->getHitPointRecover(), true);
