@@ -385,9 +385,9 @@ class TOTK
         $Recipen°s_original = [];
         $Recipes_original = [];
         foreach ($meals as $m) {
-            if (isset($m['Euen name'])) $EuenNames[] = $m['Euen name'];
-            if (isset($m['Recipen°'])) $Recipen°s[] = $m['Recipen°'];
-            if (isset($m['Recipe'])) $Recipes[] = $m['Recipe'];
+            if (isset($m['Euen name'])) $EuenNames_original[] = $m['Euen name'];
+            if (isset($m['Recipen°'])) $Recipen°s_original[] = $m['Recipen°'];
+            if (isset($m['Recipe'])) $Recipes_original[] = $m['Recipe'];
         }
         $BonusHeart = $meal['BonusHeart'] ? $meal['BonusHeart'] : 0;
         $BonusLevel = $meal['BonusLevel'] ? $meal['BonusLevel'] : 0;
