@@ -388,8 +388,6 @@ class TOTK
         $BonusTime = $meal['BonusTime'] ? $meal['BonusTime'] : 0;
 
         $embed->addFieldValues('Search Term', "`$value`");
-        if ($EuenName) $embed->addFieldValues('Euen name', $EuenName);
-        if ($Recipen°) $embed->addFieldValues('Recipe n°', $Recipen°);
         if ($Recipes) {
             $EuenNames = [];
             $Recipen°s = [];
