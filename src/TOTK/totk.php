@@ -403,7 +403,7 @@ class TOTK
 
         $int = 1;
         foreach ($EuenNames_original as $EuenName) {
-            if (($s = strlen(implode(', ', $EuenNames) . ($str = "$int: `$EuenName`")) + $EuenNames_strlen) < 1024) {
+            if (($s = strlen(implode(PHP_EOL, $EuenNames) . ($str = "$int: `$EuenName`")) + $EuenNames_strlen) < 1024) {
                 if (! in_array($str, $EuenNames)) {
                     $EuenNames[] = $str;
                     $EuenNames_strlen += $s;
@@ -413,7 +413,7 @@ class TOTK
         }
         $int = 1;
         foreach ($Recipen°s_original as $Recipen°) {
-            if (($s = strlen(implode(', ', $Recipen°s) . ($str = "$int: `$Recipen°`")) + $Recipen°s_strlen) < 1024) {
+            if (($s = strlen(implode(PHP_EOL, $Recipen°s) . ($str = "$int: `$Recipen°`")) + $Recipen°s_strlen) < 1024) {
                 if (! in_array($str, $Recipen°s)) {
                     $Recipen°s[] = $str;
                     $Recipen°s_strlen += $s;
@@ -431,8 +431,8 @@ class TOTK
             }
             $int++;
         }
-        if ($EuenNames) $embed->addFieldValues('Euen name', implode(', ', $EuenNames), true);
-        if ($Recipen°s) $embed->addFieldValues('Recipe n°', implode(', ', $Recipen°s), true);
+        if ($EuenNames) $embed->addFieldValues('Euen name', implode(PHP_EOL, $EuenNames), true);
+        if ($Recipen°s) $embed->addFieldValues('Recipe n°', implode(PHP_EOL, $Recipen°s), true);
         if ($formatted_recipes) $embed->addFieldValues('Recipe', implode(PHP_EOL, $formatted_recipes));
         if ($BonusHeart) $embed->addFieldValues('Bonus Heart', $BonusHeart, true);
         if ($BonusLevel) $embed->addFieldValues('Bonus Level', $BonusLevel, true);
