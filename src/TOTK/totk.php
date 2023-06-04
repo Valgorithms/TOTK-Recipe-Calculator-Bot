@@ -397,12 +397,15 @@ class TOTK
         $EuenNames = [];
         $EuenNames_strlen = 0;
         $EuenNames_dupes = [];
+        $EuenNames_truncated = false;
         $Recipen°s = [];
         $Recipen°s_strlen = 0;
         $Recipen°s_dupes = [];
+        $Recipen°s_truncated = false;
         $formatted_recipes = [];
         $formatted_recipes_strlen = 0;
         $formatted_recipes_dupes = [];
+        $formatted_recipes_truncated = false;
 
         $int = 1;
         foreach ($EuenNames_original as $EuenName) {
@@ -412,7 +415,7 @@ class TOTK
                     $EuenNames_strlen += $s;
                     $EuenNames_dupes[] = $EuenName;
                 }
-            }
+            } else $EuenNames_truncated = true;
             $int++;
         }
         $int = 1;
@@ -423,7 +426,7 @@ class TOTK
                     $Recipen°s_strlen += $s;
                     $Recipen°s_dupes[] = $Recipen°;
                 }
-            }
+            } else $Recipen°s_truncated = true;
             $int++;
         }
         $int = 1;
@@ -434,12 +437,12 @@ class TOTK
                     $formatted_recipes_strlen += $s;
                     $formatted_recipes_dupes[] = $Recipe;
                 }
-            }
+            } else $formatted_recipes_truncated = true;
             $int++;
         }
-        if ($EuenNames) $embed->addFieldValues('Euen name', implode(PHP_EOL, $EuenNames), true);
-        if ($Recipen°s) $embed->addFieldValues('Recipe n°', implode(PHP_EOL, $Recipen°s), true);
-        if ($formatted_recipes) $embed->addFieldValues('Recipe', implode(PHP_EOL, $formatted_recipes));
+        if ($EuenNames) $embed->addFieldValues($EuenNames_truncated ? 'Euen name (Truncated)' : 'Euen name', implode(PHP_EOL, $EuenNames), true);
+        if ($Recipen°s) $embed->addFieldValues($Recipen°s_truncated ? 'Recipe n°' : 'Recipe n° (Truncated)', implode(PHP_EOL, $Recipen°s), true);
+        if ($formatted_recipes) $embed->addFieldValues($Recipen°s_truncated ? 'Recipe (Truncated)' : 'Recipe', implode(PHP_EOL, $formatted_recipes));
         if ($BonusHeart) $embed->addFieldValues('Bonus Heart', $BonusHeart, true);
         if ($BonusLevel) $embed->addFieldValues('Bonus Level', $BonusLevel, true);
         if ($BonusTime) $embed->addFieldValues('Bonus Time', $BonusTime, true);
