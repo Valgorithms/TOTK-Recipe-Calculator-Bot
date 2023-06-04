@@ -349,14 +349,14 @@ class TOTK
             if (isset($output['Meal']['Recipe n°'])) $embed->addFieldValues('Recipe n°', $output['Meal']['Recipe n°'], true);
             //$embed->addFieldValues('Required Ingredients', $output['Meal']['Recipe'], true);
             if (isset($output['EffectType'])) $embed->addFieldValues('Effect Type', $output['EffectType']);
-            if (isset($output['EffectLevel'])) $embed->addFieldValues('Effect Type', $output['EffectLevel']);
-            if (isset($output['HitPointRepair'])) $embed->addFieldValues('Effect Type', $output['HitPointRepair']);
-            if (isset($output['ConfirmedTime'])) $embed->addFieldValues('Effect Type', $output['ConfirmedTime']);
-            if (isset($output['HitPointRecover'])) $embed->addFieldValues('Effect Type', $output['HitPointRecover']);
-            if (isset($output['LifeMaxUp'])) $embed->addFieldValues('Effect Type', $output['LifeMaxUp']);
-            if (isset($output['StaminaRecover'])) $embed->addFieldValues('Effect Type', $output['StaminaRecover']);
-            if (isset($output['ExStamina'])) $embed->addFieldValues('Effect Type', $output['ExStamina']);
-            if (isset($output['CriticalChance'])) $embed->addFieldValues('Effect Type', $output['CriticalChance']);
+            if (isset($output['EffectLevel'])) $embed->addFieldValues('Effect Level (Potency)', $output['EffectLevel']);
+            if (isset($output['HitPointRepair'])) $embed->addFieldValues('HitPointRepair', $output['HitPointRepair']);
+            if (isset($output['ConfirmedTime'])) $embed->addFieldValues('ConfirmedTime', $output['ConfirmedTime']);
+            if (isset($output['HitPointRecover'])) $embed->addFieldValues('HitPointRecover', $output['HitPointRecover']);
+            if (isset($output['LifeMaxUp'])) $embed->addFieldValues('LifeMaxUp', $output['LifeMaxUp']);
+            if (isset($output['StaminaRecover'])) $embed->addFieldValues('StaminaRecover', $output['StaminaRecover']);
+            if (isset($output['ExStamina'])) $embed->addFieldValues('ExStamina', $output['ExStamina']);
+            if (isset($output['CriticalChance'])) $embed->addFieldValues('CriticalChance', $output['CriticalChance']);
             return $embed;
         }
         return 'Not implemented yet!'; //The recipe didn't result in a valid meal
