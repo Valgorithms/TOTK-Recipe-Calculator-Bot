@@ -364,7 +364,7 @@ class TOTK
                 if (isset($output['ConfirmedTime'])) $rand_effects .= PHP_EOL . '+5 Minutes to Duration';
                 if (isset($output['Tier'])) $rand_effects .= 'Increase Tier Level';
                 if (isset($output['ExStamina']) || isset($output['ExStamina'])) $rand_effects .= PHP_EOL . '+2/5ths Stamina or Extra Stamina Wheel';
-                $embed->addFieldValues('Random Possible Critical Effects', '');
+                $embed->addFieldValues('Random Possible Critical Effects', $rand_effects);
             }
             return $embed;
         }
