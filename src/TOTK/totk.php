@@ -400,18 +400,20 @@ class TOTK
             foreach ($Recipes as $recipe) {
                 if (!in_array($EuenName, $Recipen°Names)) {
                     $Recipen°Names[] = $EuenName;
-                    if (($s = strlen(implode(', ', $EuenNames) . "$int: `$EuenName`") + $EuenNames_strlen) < 1024) {
+                    if (($s = strlen(implode(', ', $EuenNames) . ($str = "$int: `$EuenName`")) + $EuenNames_strlen) < 1024) {
                         $EuenNames_strlen += $s;
-                        $EuenNames[] = "$int: `$EuenName`";
+                        $EuenNames[] = $str;
                     }
-                    if (($s = strlen(implode(', ', $Recipen°s) ."$int: `$Recipen°`") + $Recipen°s_strlen) < 1024) {
+                    if (($s = strlen(implode(', ', $Recipen°s) . ($str = "$int: `$Recipen°`")) + $Recipen°s_strlen) < 1024) {
                         $Recipen°s_strlen += $s;
-                        $Recipen°s[] = "$int: `$Recipen°`";
+                        $Recipen°s[] = $str;
                     }
                 }
-                if (($s = strlen(implode(', ', $formatted_recipes) . "$int: `$recipe`") + $formatted_recipes_strlen) < 1024) {
-                    $formatted_recipes_strlen += $s;
-                    $formatted_recipes[] ="$int: `$recipe`";
+                if (($s = strlen(implode(', ', $formatted_recipes) . ($str = "$int: `$recipe`")) + $formatted_recipes_strlen) < 1024) {
+                    if (! in_array($str, $formatted_recipes[])) {
+                        $formatted_recipes_strlen += $s;
+                        $formatted_recipes[] = $str;
+                    }
                 }
                 $int++;
             }
