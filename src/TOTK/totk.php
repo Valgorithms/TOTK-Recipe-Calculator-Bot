@@ -386,7 +386,7 @@ class TOTK
         $Recipes_original = [];
         foreach ($meals as $m) {
             if (isset($m['Euen name'])) $EuenNames_original[] = $m['Euen name'];
-            if (isset($m['Recipen°'])) $Recipen°s_original[] = $m['Recipen°'];
+            if (isset($m['Recipe n°'])) $Recipen°s_original[] = $m['Recipe n°'];
             if (isset($m['Recipe'])) $Recipes_original[] = $m['Recipe'];
         }
         $BonusHeart = $meal['BonusHeart'] ? $meal['BonusHeart'] : 0;
@@ -404,7 +404,7 @@ class TOTK
         $int = 1;
         foreach ($EuenNames_original as $EuenName) {
             if (($s = strlen(implode(PHP_EOL, $EuenNames) . ($str = "$int: `$EuenName`")) + $EuenNames_strlen) < 1024) {
-                if (! in_array($str, $EuenNames)) {
+                if (! in_array($str, $EuenNames)) { //This doesn't work because of $int
                     $EuenNames[] = $str;
                     $EuenNames_strlen += $s;
                 }
@@ -414,7 +414,7 @@ class TOTK
         $int = 1;
         foreach ($Recipen°s_original as $Recipen°) {
             if (($s = strlen(implode(PHP_EOL, $Recipen°s) . ($str = "$int: `$Recipen°`")) + $Recipen°s_strlen) < 1024) {
-                if (! in_array($str, $Recipen°s)) {
+                if (! in_array($str, $Recipen°s)) { //This doesn't work because of $int
                     $Recipen°s[] = $str;
                     $Recipen°s_strlen += $s;
                 }
