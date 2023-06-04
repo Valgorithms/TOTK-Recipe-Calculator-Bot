@@ -393,7 +393,7 @@ class TOTK
         $BonusLevel = $meal['BonusLevel'] ? $meal['BonusLevel'] : 0;
         $BonusTime = $meal['BonusTime'] ? $meal['BonusTime'] : 0;
 
-        $embed->addFieldValues('Search Term', "`$value`");
+        $embed->addFieldValues('Search Term', "$key: `$value`");
         $EuenNames = [];
         $EuenNames_strlen = 0;
         $EuenNames_dupes = [];
