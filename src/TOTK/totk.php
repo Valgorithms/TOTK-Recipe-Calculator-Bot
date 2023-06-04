@@ -379,10 +379,16 @@ class TOTK
         $embed->setFooter($this->embed_footer);
         $embed->setTitle('Recipe Lookup');
         //$ActorName = $meal['ActorName'] ?? '';
-        $EuenName = $meal['Euen name'] ?? '';
-        $Recipen° = $meal['Recipe n°'] ?? '';
-        $Recipes = [];
-        foreach ($meals as $m) if (isset($m['Recipe'])) $Recipes[] = $m['Recipe'];
+        //$EuenName = $meal['Euen name'] ?? '';
+        //$Recipen° = $meal['Recipe n°'] ?? '';
+        $EuenNames_original = [];
+        $Recipen°s_original = [];
+        $Recipes_original = [];
+        foreach ($meals as $m) {
+            if (isset($m['Euen name'])) $EuenNames[] = $m['Euen name'];
+            if (isset($m['Recipen°'])) $Recipen°s[] = $m['Recipen°'];
+            if (isset($m['Recipe'])) $Recipes[] = $m['Recipe'];
+        }
         $BonusHeart = $meal['BonusHeart'] ? $meal['BonusHeart'] : 0;
         $BonusLevel = $meal['BonusLevel'] ? $meal['BonusLevel'] : 0;
         $BonusTime = $meal['BonusTime'] ? $meal['BonusTime'] : 0;
@@ -393,26 +399,35 @@ class TOTK
             $EuenNames_strlen = 0;
             $Recipen°s = [];
             $Recipen°s_strlen = 0;
-            $Recipen°Names = [];
             $formatted_recipes = [];
             $formatted_recipes_strlen = 0;
+
             $int = 1;
-            foreach ($Recipes as $recipe) {
-                if (!in_array($EuenName, $Recipen°Names)) {
-                    $Recipen°Names[] = $EuenName;
-                    if (($s = strlen(implode(', ', $EuenNames) . ($str = "$int: `$EuenName`")) + $EuenNames_strlen) < 1024) {
-                        $EuenNames_strlen += $s;
+            foreach ($EuenNames_original as $EuenName) {
+                if (($s = strlen(implode(', ', $EuenNames) . ($str = "$int: `$EuenName`")) + $EuenNames_strlen) < 1024) {
+                    if (! in_array($str, $EuenNames)) {
                         $EuenNames[] = $str;
-                    }
-                    if (($s = strlen(implode(', ', $Recipen°s) . ($str = "$int: `$Recipen°`")) + $Recipen°s_strlen) < 1024) {
-                        $Recipen°s_strlen += $s;
-                        $Recipen°s[] = $str;
+                        $EuenNames_strlen += $s;
                     }
                 }
-                if (($s = strlen(implode(', ', $formatted_recipes) . ($str = "$int: `$recipe`")) + $formatted_recipes_strlen) < 1024) {
+                $int++;
+            }
+            $int = 1;
+            foreach ($Recipen°s_original as $Recipen°) {
+                if (($s = strlen(implode(', ', $Recipen°s) . ($str = "$int: `$Recipen°`")) + $Recipen°s_strlen) < 1024) {
+                    if (! in_array($str, $Recipen°s)) {
+                        $Recipen°s[] = $str;
+                        $Recipen°s_strlen += $s;
+                    }
+                }
+                $int++;
+            }
+            $int = 1;
+            foreach ($Recipes_original as $Recipe) {
+                if (($s = strlen(implode(', ', $formatted_recipes) . ($str = "$int: `$Recipe`")) + $formatted_recipes_strlen) < 1024) {
                     if (! in_array($str, $formatted_recipes)) {
-                        $formatted_recipes_strlen += $s;
                         $formatted_recipes[] = $str;
+                        $formatted_recipes_strlen += $s;
                     }
                 }
                 $int++;
