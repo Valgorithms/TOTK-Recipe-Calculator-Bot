@@ -394,48 +394,46 @@ class TOTK
         $BonusTime = $meal['BonusTime'] ? $meal['BonusTime'] : 0;
 
         $embed->addFieldValues('Search Term', "`$value`");
-        if ($Recipes) {
-            $EuenNames = [];
-            $EuenNames_strlen = 0;
-            $Recipen°s = [];
-            $Recipen°s_strlen = 0;
-            $formatted_recipes = [];
-            $formatted_recipes_strlen = 0;
+        $EuenNames = [];
+        $EuenNames_strlen = 0;
+        $Recipen°s = [];
+        $Recipen°s_strlen = 0;
+        $formatted_recipes = [];
+        $formatted_recipes_strlen = 0;
 
-            $int = 1;
-            foreach ($EuenNames_original as $EuenName) {
-                if (($s = strlen(implode(', ', $EuenNames) . ($str = "$int: `$EuenName`")) + $EuenNames_strlen) < 1024) {
-                    if (! in_array($str, $EuenNames)) {
-                        $EuenNames[] = $str;
-                        $EuenNames_strlen += $s;
-                    }
+        $int = 1;
+        foreach ($EuenNames_original as $EuenName) {
+            if (($s = strlen(implode(', ', $EuenNames) . ($str = "$int: `$EuenName`")) + $EuenNames_strlen) < 1024) {
+                if (! in_array($str, $EuenNames)) {
+                    $EuenNames[] = $str;
+                    $EuenNames_strlen += $s;
                 }
-                $int++;
             }
-            $int = 1;
-            foreach ($Recipen°s_original as $Recipen°) {
-                if (($s = strlen(implode(', ', $Recipen°s) . ($str = "$int: `$Recipen°`")) + $Recipen°s_strlen) < 1024) {
-                    if (! in_array($str, $Recipen°s)) {
-                        $Recipen°s[] = $str;
-                        $Recipen°s_strlen += $s;
-                    }
-                }
-                $int++;
-            }
-            $int = 1;
-            foreach ($Recipes_original as $Recipe) {
-                if (($s = strlen(implode(', ', $formatted_recipes) . ($str = "$int: `$Recipe`")) + $formatted_recipes_strlen) < 1024) {
-                    if (! in_array($str, $formatted_recipes)) {
-                        $formatted_recipes[] = $str;
-                        $formatted_recipes_strlen += $s;
-                    }
-                }
-                $int++;
-            }
-            if ($EuenNames) $embed->addFieldValues('Euen name', implode(', ', $EuenNames), true);
-            if ($Recipen°s) $embed->addFieldValues('Recipe n°', implode(', ', $Recipen°s), true);
-            $embed->addFieldValues('Recipe', implode(PHP_EOL, $formatted_recipes));
+            $int++;
         }
+        $int = 1;
+        foreach ($Recipen°s_original as $Recipen°) {
+            if (($s = strlen(implode(', ', $Recipen°s) . ($str = "$int: `$Recipen°`")) + $Recipen°s_strlen) < 1024) {
+                if (! in_array($str, $Recipen°s)) {
+                    $Recipen°s[] = $str;
+                    $Recipen°s_strlen += $s;
+                }
+            }
+            $int++;
+        }
+        $int = 1;
+        foreach ($Recipes_original as $Recipe) {
+            if (($s = strlen(implode(PHP_EOL, $formatted_recipes) . ($str = "$int: `$Recipe`")) + $formatted_recipes_strlen) < 1024) {
+                if (! in_array($str, $formatted_recipes)) {
+                    $formatted_recipes[] = $str;
+                    $formatted_recipes_strlen += $s;
+                }
+            }
+            $int++;
+        }
+        if ($EuenNames) $embed->addFieldValues('Euen name', implode(', ', $EuenNames), true);
+        if ($Recipen°s) $embed->addFieldValues('Recipe n°', implode(', ', $Recipen°s), true);
+        if ($formatted_recipes) $embed->addFieldValues('Recipe', implode(PHP_EOL, $formatted_recipes));
         if ($BonusHeart) $embed->addFieldValues('Bonus Heart', $BonusHeart, true);
         if ($BonusLevel) $embed->addFieldValues('Bonus Level', $BonusLevel, true);
         if ($BonusTime) $embed->addFieldValues('Bonus Time', $BonusTime, true);
