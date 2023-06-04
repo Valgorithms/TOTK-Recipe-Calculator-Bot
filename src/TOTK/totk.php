@@ -483,7 +483,6 @@ class TOTK
         $embed->addFieldValues('EffectLevel', $ingredient->getEffectLevel(), true);
         $embed->addFieldValues('EffectType', $ingredient->getEffectType(), true);
         $embed->addFieldValues('AlwaysCrits', $ingredient->getAlwaysCrits(), true);
-        $embed->addFieldValues('ConfirmedTime', $ingredient->getConfirmedTime(), true);
         $embed->addFieldValues('HitPointRecover', $ingredient->getHitPointRecover(), true);
         $embed->addFieldValues('BoostEffectiveTime', $ingredient->getBoostEffectiveTime(), true);
         $embed->addFieldValues('BoostHitPointRecover', $ingredient->getBoostHitPointRecover(), true);
