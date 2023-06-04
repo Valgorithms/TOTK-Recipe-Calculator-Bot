@@ -351,12 +351,12 @@ class TOTK
             if (isset($output['EffectType'])) $embed->addFieldValues('Effect Type', $output['EffectType']);
             if (isset($output['EffectLevel'])) $embed->addFieldValues('Effect Level (Potency)', $output['EffectLevel']);
             if (isset($output['HitPointRepair'])) $embed->addFieldValues('HitPointRepair', $output['HitPointRepair']);
-            if (isset($output['ConfirmedTime'])) $embed->addFieldValues('ConfirmedTime', $output['ConfirmedTime']);
-            if (isset($output['HitPointRecover'])) $embed->addFieldValues('HitPointRecover', $output['HitPointRecover']);
-            if (isset($output['LifeMaxUp'])) $embed->addFieldValues('LifeMaxUp', $output['LifeMaxUp']);
-            if (isset($output['StaminaRecover'])) $embed->addFieldValues('StaminaRecover', $output['StaminaRecover']);
-            if (isset($output['ExStamina'])) $embed->addFieldValues('ExStamina', $output['ExStamina']);
-            if (isset($output['CriticalChance'])) $embed->addFieldValues('CriticalChance', $output['CriticalChance']);
+            if (isset($output['ConfirmedTime'])) $embed->addFieldValues('Duration', $output['ConfirmedTime']);
+            if (isset($output['HitPointRecover'])) $embed->addFieldValues('HitPointRecover (Quarter Hearts)', $output['HitPointRecover']);
+            if (isset($output['LifeMaxUp'])) $embed->addFieldValues('Life Max Up', $output['LifeMaxUp']);
+            if (isset($output['StaminaRecover'])) $embed->addFieldValues('StaminaRecover (Degrees)', $output['StaminaRecover']);
+            if (isset($output['ExStamina'])) $embed->addFieldValues('ExStamina (Degrees)', $output['ExStamina']);
+            if (isset($output['CriticalChance'])) $embed->addFieldValues('Critical Chance', $output['CriticalChance']);
             return $embed;
         }
         return 'Not implemented yet!'; //The recipe didn't result in a valid meal
