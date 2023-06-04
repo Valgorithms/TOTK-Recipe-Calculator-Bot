@@ -345,7 +345,7 @@ class TOTK
         if ($valid_names) $embed->addFieldValues('Valid Ingredients',  implode(', ', $valid_names));
         if ($invalid_names) $embed->addFieldValues('Invalid Ingredients',  implode(', ', $invalid_names));
         if (isset($output['Meal'])) {
-            if (isset($output['Meal']['Euen name'])) $embed->addFieldValues('Recipe', $output['Meal']['Euen name'], true);
+            if (isset($output['Meal']['Euen name'])) $embed->addFieldValues('Euen name', $output['Meal']['Euen name'], true);
             if (isset($output['Meal']['Recipe n°'])) $embed->addFieldValues('Recipe n°', $output['Meal']['Recipe n°'], true);
             //$embed->addFieldValues('Required Ingredients', $output['Meal']['Recipe'], true);
             if (isset($output['EffectType'])) $embed->addFieldValues('Effect Type', $output['EffectType']);
