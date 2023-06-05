@@ -351,7 +351,7 @@ class TOTK
             if (isset($output['EffectType'])) if ($output['EffectType'] !== 'None') $embed->addFieldValues('Effect Type', $output['EffectType'], true);
             if (isset($output['EffectLevel'])) $embed->addFieldValues('Effect Level (Potency)', $output['EffectLevel'], true);
             if (isset($output['Tier'])) $embed->addFieldValues('Tier', $output['Tier'], true);
-            if (isset($output['Duration'])) $embed->addFieldValues('Duration', $output['Duration'], true );
+            if (isset($output['Duration'])) $embed->addFieldValues('Duration (Seconds)', $output['Duration'], true );
             if (isset($output['HitPointRecover'])) $embed->addFieldValues('HitPointRecover (Quarter Hearts)', $output['HitPointRecover'], true);
             if (isset($output['HitPointRepair'])) $embed->addFieldValues('HitPointRepair', $output['HitPointRepair'], true);
             if (isset($output['LifeMaxUp'])) $embed->addFieldValues('Life Max Up', $output['LifeMaxUp'], true );
