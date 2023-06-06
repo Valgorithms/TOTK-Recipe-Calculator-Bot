@@ -322,7 +322,7 @@ class TOTK
                 || (! is_numeric($name) && ! str_starts_with(strtolower($ingredient['Euen name']), strtolower($name)) && ! str_ends_with(strtolower($ingredient['Euen name']), strtolower($name)) && str_contains(strtolower($ingredient['Euen name']), strtolower($name)))
                 )
             );});
-            if (! $materials->count()) $invalid_names = [$name];
+            if (! $materials->count()) $invalid_names[] = $name;
             else {
                 try { $ingredient = new Ingredient($this->materials_collection->get('Euen name', $materials->first()['Euen name'])); }
                 catch (\Error $e) {
