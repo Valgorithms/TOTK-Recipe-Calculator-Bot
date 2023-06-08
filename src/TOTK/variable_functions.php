@@ -93,7 +93,7 @@ $on_message = function (TOTK $TOTK, $message) use ($guild_message)
     if (! $message_content) return;
     
     if (str_starts_with($message_content_lower, 'ping')) return $message->reply('Pong!');
-    if (str_starts_with($message_content_lower, 'help')) return $message->reply('**List of Commands**: ckey, bancheck, insult, cpu, ping, (un)whitelistme, rankme, ranking. **Staff only**: ban, logs, hostnomads, killnomads, restartnomads, mapswapnomads, hosttdm, killtdm, restarttdm, mapswaptdm, panic bunker');
+    if (str_starts_with($message_content_lower, 'help')) return $message->reply('**List of Commands**: `ping`, `help`, `cpu`');
     if (str_starts_with($message_content_lower, 'cpu')) {
          if (PHP_OS_FAMILY == "Windows") {
             $p = shell_exec('powershell -command "gwmi Win32_PerfFormattedData_PerfOS_Processor | select PercentProcessorTime"');
@@ -117,19 +117,6 @@ $on_message = function (TOTK $TOTK, $message) use ($guild_message)
 
 $slash_init = function (TOTK $TOTK, $commands): void
 { //ready_slash, requires other functions to work
-    $TOTK->discord->listenCommand('pull', function ($interaction) use ($TOTK): void
-    {
-        $TOTK->logger->info('[GIT PULL]');
-        \execInBackground('git pull');
-        $interaction->respondWithMessage(MessageBuilder::new()->setContent('Updating code from GitHub...'));
-    });
-    
-    $TOTK->discord->listenCommand('update', function ($interaction) use ($TOTK): void
-    {
-        $TOTK->logger->info('[COMPOSER UPDATE]');
-        \execInBackground('composer update');
-        $interaction->respondWithMessage(MessageBuilder::new()->setContent('Updating dependencies...'));
-    });
 
     /*For deferred interactions
     $TOTK->discord->listenCommand('',  function (Interaction $interaction) use ($TOTK) {
