@@ -36,7 +36,7 @@ if (! @include getcwd() . '/vendor/autoload.php') {
     include __DIR__ . '/src/TOTK/variable_functions.php';
     include __DIR__ . '/src/TOTK/functions.php';
 }
-include __DIR__ . '/src/TOTK/variable_functions.php';
+@include __DIR__ . '/src/TOTK/variable_functions.php';
 
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
