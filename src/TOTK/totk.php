@@ -463,7 +463,7 @@ class TOTK
             $int++;
         }
         if ($EuenNames) $embed->addFieldValues($EuenNames_truncated ? 'Euen name (Truncated)' : 'Euen name', implode(PHP_EOL, $EuenNames), true);
-        if ($Recipen°s) $embed->addFieldValues($Recipen°s_truncated ? 'Recipe n°' : 'Recipe n° (Truncated)', implode(PHP_EOL, $Recipen°s), true);
+        if ($Recipen°s) $embed->addFieldValues($Recipen°s_truncated ? 'Recipe n° (Truncated)' : 'Recipe n°', implode(PHP_EOL, $Recipen°s), true);
         if ($formatted_recipes) $embed->addFieldValues($formatted_recipes_truncated ? 'Recipe (Truncated)' : 'Recipe', implode(PHP_EOL, $formatted_recipes));
         if ($BonusHeart) $embed->addFieldValues('Bonus Heart', $BonusHeart, true);
         if ($BonusLevel) $embed->addFieldValues('Bonus Level', $BonusLevel, true);
